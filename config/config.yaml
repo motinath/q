@@ -1,0 +1,47 @@
+# Q-SENTINEL System Configuration & Parameters
+# Documented Origins:
+# - Theory-derived: Standard quantum optics equations (Scarani 2009, GLLP 2004, Ma 2005)
+# - Calibration-derived: Typical InGaAs/InP gated SPAD & SMF-28 specifications
+# - Operator-configured: QNOC alert thresholds & sliding window sizes
+
+system:
+  name: "Q-SENTINEL"
+  version: "2026.1-QIC"
+  description: "ML-based, physics-governed diagnostics and predictive maintenance for QKD networks"
+
+quantum_channel:
+  wavelength_nm: 1550.0                # Origin: Calibration-derived (Telecom C-band)
+  nominal_attenuation_db_per_km: 0.20  # Origin: Theory-derived (ITU-T G.652 SMF-28 fiber)
+  default_fiber_length_km: 25.0        # Origin: Operator-configured (Metropolitan link span)
+  refractive_index_n: 1.4682           # Origin: Theory-derived (Silica fiber core)
+
+transmitter_alice:
+  repetition_rate_hz: 1.0e8            # Origin: Calibration-derived (100 MHz clock rate)
+  mean_photon_signal_mu: 0.50          # Origin: Theory-derived (Decoy-state BB84 optimum)
+  mean_photon_decoy_nu: 0.10           # Origin: Theory-derived (Decoy intensity)
+
+receiver_bob:
+  detection_efficiency: 0.15           # Origin: Calibration-derived (Optics + InGaAs APD efficiency)
+  nominal_visibility: 0.985            # Origin: Calibration-derived (Interferometric fringe contrast)
+  nominal_dark_count_rate_hz: 500.0    # Origin: Calibration-derived (Gated SPAD @ -40 deg C)
+  nominal_temperature_celsius: -40.0   # Origin: Calibration-derived (TEC cooler setpoint)
+  nominal_timing_jitter_ps: 65.0       # Origin: Calibration-derived (FWHM time tagging jitter)
+
+security_thresholds:
+  qber_security_cutoff: 0.110          # Origin: Theory-derived (Shor-Preskill / GLLP 11.0% bound)
+  qber_warning_threshold: 0.080        # Origin: Operator-configured (Early warning trigger)
+  reconciliation_efficiency: 1.16      # Origin: Theory-derived (LDPC / Cascade f(e) factor)
+
+feature_engine:
+  window_short_samples: 10             # Origin: Operator-configured
+  window_medium_samples: 25            # Origin: Operator-configured (Rolling W=25)
+  adaptive_baseline_warmup: 30         # Origin: Operator-configured
+
+alarm_severities:
+  Intercept-Resend: "CRITICAL"
+  Detector APD Degradation: "MAJOR"
+  Channel Attenuation Event: "HIGH"
+  Optical Misalignment: "MEDIUM"
+  Thermal Drift: "MEDIUM"
+  Timing Jitter: "MEDIUM"
+  Normal: "NORMAL"

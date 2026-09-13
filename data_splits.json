@@ -1,0 +1,827 @@
+{
+  "manifest_version": "2026.1",
+  "split_policy": "Whole scenario run isolation (zero overlapping windows across splits)",
+  "total_scenario_runs": 100,
+  "partitions": {
+    "training_runs": [
+      {
+        "run_id": "RUN_001",
+        "seed": 10001,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.525,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_002",
+        "seed": 10002,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.87,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_003",
+        "seed": 10003,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.739,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_004",
+        "seed": 10004,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.659,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_005",
+        "seed": 10005,
+        "fault_type": "Timing Jitter",
+        "intensity": 0.394,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_006",
+        "seed": 10006,
+        "fault_type": "Intercept-Resend",
+        "intensity": 0.394,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_007",
+        "seed": 10007,
+        "fault_type": "Detector Blinding",
+        "intensity": 0.335,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_008",
+        "seed": 10008,
+        "fault_type": "Photon Number Splitting",
+        "intensity": 0.82,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_009",
+        "seed": 10009,
+        "fault_type": "Time-Shift Attack",
+        "intensity": 0.661,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_010",
+        "seed": 10010,
+        "fault_type": "Normal",
+        "intensity": 0.0,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_011",
+        "seed": 10011,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.725,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_012",
+        "seed": 10012,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.312,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_013",
+        "seed": 10013,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.882,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_014",
+        "seed": 10014,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.799,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_015",
+        "seed": 10015,
+        "fault_type": "Timing Jitter",
+        "intensity": 0.427,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_016",
+        "seed": 10016,
+        "fault_type": "Intercept-Resend",
+        "intensity": 0.409,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_017",
+        "seed": 10017,
+        "fault_type": "Detector Blinding",
+        "intensity": 0.41,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_018",
+        "seed": 10018,
+        "fault_type": "Photon Number Splitting",
+        "intensity": 0.483,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_019",
+        "seed": 10019,
+        "fault_type": "Time-Shift Attack",
+        "intensity": 0.615,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_020",
+        "seed": 10020,
+        "fault_type": "Normal",
+        "intensity": 0.0,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_021",
+        "seed": 10021,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.559,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_022",
+        "seed": 10022,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.475,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_023",
+        "seed": 10023,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.667,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_024",
+        "seed": 10024,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.384,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_025",
+        "seed": 10025,
+        "fault_type": "Timing Jitter",
+        "intensity": 0.475,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_026",
+        "seed": 10026,
+        "fault_type": "Intercept-Resend",
+        "intensity": 0.52,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_027",
+        "seed": 10027,
+        "fault_type": "Detector Blinding",
+        "intensity": 0.574,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_028",
+        "seed": 10028,
+        "fault_type": "Photon Number Splitting",
+        "intensity": 0.771,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_029",
+        "seed": 10029,
+        "fault_type": "Time-Shift Attack",
+        "intensity": 0.42,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_030",
+        "seed": 10030,
+        "fault_type": "Normal",
+        "intensity": 0.0,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_031",
+        "seed": 10031,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.609,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_032",
+        "seed": 10032,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.655,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_033",
+        "seed": 10033,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.328,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_034",
+        "seed": 10034,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.665,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_035",
+        "seed": 10035,
+        "fault_type": "Timing Jitter",
+        "intensity": 0.402,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_036",
+        "seed": 10036,
+        "fault_type": "Intercept-Resend",
+        "intensity": 0.339,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_037",
+        "seed": 10037,
+        "fault_type": "Detector Blinding",
+        "intensity": 0.869,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_038",
+        "seed": 10038,
+        "fault_type": "Photon Number Splitting",
+        "intensity": 0.879,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_039",
+        "seed": 10039,
+        "fault_type": "Time-Shift Attack",
+        "intensity": 0.785,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_040",
+        "seed": 10040,
+        "fault_type": "Normal",
+        "intensity": 0.0,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_041",
+        "seed": 10041,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.483,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_042",
+        "seed": 10042,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.359,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_043",
+        "seed": 10043,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.711,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_044",
+        "seed": 10044,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.564,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_045",
+        "seed": 10045,
+        "fault_type": "Timing Jitter",
+        "intensity": 0.373,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_046",
+        "seed": 10046,
+        "fault_type": "Intercept-Resend",
+        "intensity": 0.597,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_047",
+        "seed": 10047,
+        "fault_type": "Detector Blinding",
+        "intensity": 0.321,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_048",
+        "seed": 10048,
+        "fault_type": "Photon Number Splitting",
+        "intensity": 0.846,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_049",
+        "seed": 10049,
+        "fault_type": "Time-Shift Attack",
+        "intensity": 0.455,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_050",
+        "seed": 10050,
+        "fault_type": "Normal",
+        "intensity": 0.0,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_051",
+        "seed": 10051,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.698,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_052",
+        "seed": 10052,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.487,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_053",
+        "seed": 10053,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.612,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_054",
+        "seed": 10054,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.628,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_055",
+        "seed": 10055,
+        "fault_type": "Timing Jitter",
+        "intensity": 0.411,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_056",
+        "seed": 10056,
+        "fault_type": "Intercept-Resend",
+        "intensity": 0.882,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_057",
+        "seed": 10057,
+        "fault_type": "Detector Blinding",
+        "intensity": 0.765,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_058",
+        "seed": 10058,
+        "fault_type": "Photon Number Splitting",
+        "intensity": 0.864,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_059",
+        "seed": 10059,
+        "fault_type": "Time-Shift Attack",
+        "intensity": 0.837,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_060",
+        "seed": 10060,
+        "fault_type": "Normal",
+        "intensity": 0.0,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_061",
+        "seed": 10061,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.659,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_062",
+        "seed": 10062,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.853,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_063",
+        "seed": 10063,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.353,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_064",
+        "seed": 10064,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.418,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_065",
+        "seed": 10065,
+        "fault_type": "Timing Jitter",
+        "intensity": 0.327,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_066",
+        "seed": 10066,
+        "fault_type": "Intercept-Resend",
+        "intensity": 0.495,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_067",
+        "seed": 10067,
+        "fault_type": "Detector Blinding",
+        "intensity": 0.533,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_068",
+        "seed": 10068,
+        "fault_type": "Photon Number Splitting",
+        "intensity": 0.463,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_069",
+        "seed": 10069,
+        "fault_type": "Time-Shift Attack",
+        "intensity": 0.797,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_070",
+        "seed": 10070,
+        "fault_type": "Normal",
+        "intensity": 0.0,
+        "samples": 40
+      }
+    ],
+    "validation_runs": [
+      {
+        "run_id": "RUN_071",
+        "seed": 10071,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.514,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_072",
+        "seed": 10072,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.469,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_073",
+        "seed": 10073,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.626,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_074",
+        "seed": 10074,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.385,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_075",
+        "seed": 10075,
+        "fault_type": "Timing Jitter",
+        "intensity": 0.781,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_076",
+        "seed": 10076,
+        "fault_type": "Intercept-Resend",
+        "intensity": 0.345,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_077",
+        "seed": 10077,
+        "fault_type": "Detector Blinding",
+        "intensity": 0.892,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_078",
+        "seed": 10078,
+        "fault_type": "Photon Number Splitting",
+        "intensity": 0.763,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_079",
+        "seed": 10079,
+        "fault_type": "Time-Shift Attack",
+        "intensity": 0.419,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_080",
+        "seed": 10080,
+        "fault_type": "Normal",
+        "intensity": 0.0,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_081",
+        "seed": 10081,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.303,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_082",
+        "seed": 10082,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.789,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_083",
+        "seed": 10083,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.724,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_084",
+        "seed": 10084,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.737,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_085",
+        "seed": 10085,
+        "fault_type": "Timing Jitter",
+        "intensity": 0.763,
+        "samples": 40
+      }
+    ],
+    "test_runs": [
+      {
+        "run_id": "RUN_086",
+        "seed": 10086,
+        "fault_type": "Intercept-Resend",
+        "intensity": 0.344,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_087",
+        "seed": 10087,
+        "fault_type": "Detector Blinding",
+        "intensity": 0.515,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_088",
+        "seed": 10088,
+        "fault_type": "Photon Number Splitting",
+        "intensity": 0.37,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_089",
+        "seed": 10089,
+        "fault_type": "Time-Shift Attack",
+        "intensity": 0.818,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_090",
+        "seed": 10090,
+        "fault_type": "Normal",
+        "intensity": 0.0,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_091",
+        "seed": 10091,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.674,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_092",
+        "seed": 10092,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.499,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_093",
+        "seed": 10093,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.338,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_094",
+        "seed": 10094,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.487,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_095",
+        "seed": 10095,
+        "fault_type": "Timing Jitter",
+        "intensity": 0.495,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_096",
+        "seed": 10096,
+        "fault_type": "Intercept-Resend",
+        "intensity": 0.738,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_097",
+        "seed": 10097,
+        "fault_type": "Detector Blinding",
+        "intensity": 0.683,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_098",
+        "seed": 10098,
+        "fault_type": "Photon Number Splitting",
+        "intensity": 0.832,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_099",
+        "seed": 10099,
+        "fault_type": "Time-Shift Attack",
+        "intensity": 0.583,
+        "samples": 40
+      },
+      {
+        "run_id": "RUN_100",
+        "seed": 10100,
+        "fault_type": "Normal",
+        "intensity": 0.0,
+        "samples": 40
+      }
+    ],
+    "parameter_shift_runs": [
+      {
+        "run_id": "PARAM_SHIFT_01",
+        "seed": 20001,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.41,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_02",
+        "seed": 20002,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.707,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_03",
+        "seed": 20003,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.73,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_04",
+        "seed": 20004,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.631,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_05",
+        "seed": 20005,
+        "fault_type": "Timing Jitter",
+        "intensity": 0.735,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_06",
+        "seed": 20006,
+        "fault_type": "Intercept-Resend",
+        "intensity": 0.597,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_07",
+        "seed": 20007,
+        "fault_type": "Detector Blinding",
+        "intensity": 0.611,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_08",
+        "seed": 20008,
+        "fault_type": "Photon Number Splitting",
+        "intensity": 0.564,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_09",
+        "seed": 20009,
+        "fault_type": "Time-Shift Attack",
+        "intensity": 0.363,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_10",
+        "seed": 20010,
+        "fault_type": "Normal",
+        "intensity": 0.0,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_11",
+        "seed": 20011,
+        "fault_type": "Optical Misalignment",
+        "intensity": 0.404,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_12",
+        "seed": 20012,
+        "fault_type": "Channel Attenuation Event",
+        "intensity": 0.366,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_13",
+        "seed": 20013,
+        "fault_type": "Detector APD Degradation",
+        "intensity": 0.668,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
+        "run_id": "PARAM_SHIFT_14",
+        "seed": 20014,
+        "fault_type": "Thermal Drift",
+        "intensity": 0.507,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      }
+    ]
+  }
+}
