@@ -4,11 +4,20 @@ Evaluates discrete candidate actions per diagnosed fault/attack mode, computes c
 physical state projections via Layer 1 optical models, and selects the argmax action under:
 J(action) = w1 * (Recovery % / 100) - w2 * (ExecutionTime / T_max) - w3 * Risk
 
+P4.1: Added actuation_mode field to RemediationRecommendation.
+  'ADVISORY'   — hardware/environmental faults; operator must confirm before acting.
+  'AUTONOMOUS' — performance degradation with low risk; system may act immediately.
+  'EMERGENCY'  — active quantum attacks (Intercept-Resend, Detector Blinding,
+                 Time-Shift, PNS); emits a JSON actuation signal to stdout so an
+                 external controller can immediately terminate the key session.
+
 Governing Standards: ETSI GS QKD 014 / GLLP / Ma-Qi-Zhao-Lo
 Author: Senior Quantum Systems & Applied ML Engineering Team
 """
 
-from typing import Dict, Any, List, Optional, Tuple
+import json
+import sys
+from typing import Dict, Any, List, Optional, Tuple, Literal
 from dataclasses import dataclass, field
 import numpy as np
 
@@ -67,6 +76,8 @@ class RemediationRecommendation:
     optimization_rationale: str = ""
     post_physical_state: Dict[str, float] = field(default_factory=dict)
     objective_weights: Dict[str, float] = field(default_factory=dict)
+    # P4.1: Actuation mode distinguishes operator-advisory from autonomous / emergency
+    actuation_mode: str = "ADVISORY"   # 'ADVISORY' | 'AUTONOMOUS' | 'EMERGENCY'
 
 
 class RemediationOptimizer:
@@ -548,13 +559,27 @@ class RemediationOptimizer:
         utilities = [c.utility_score for c in evaluated_candidates]
         best_idx = int(np.argmax(utilities))
         winner = evaluated_candidates[best_idx]
-        
-        # 4. Formulate Optimization Rationale (ADD-3: Multi-Candidate Trade-off Matrix)
+
+        # 4. P4.1: Determine actuation mode from fault class
+        # EMERGENCY — active quantum attacks requiring immediate autonomous response
+        # AUTONOMOUS — performance faults with well-understood remediation, low risk
+        # ADVISORY   — all other cases; operator confirmation required
+        EMERGENCY_CLASSES = {"Intercept-Resend", "Detector Blinding", "Photon Number Splitting", "Time-Shift Attack"}
+        AUTONOMOUS_CLASSES = {"Thermal Drift", "Timing Jitter"}
+        if fault_class in EMERGENCY_CLASSES:
+            actuation_mode = "EMERGENCY"
+        elif fault_class in AUTONOMOUS_CLASSES and winner.operational_risk_score <= 0.25:
+            actuation_mode = "AUTONOMOUS"
+        else:
+            actuation_mode = "ADVISORY"
+
+        # 5. Formulate Optimization Rationale (ADD-3: Multi-Candidate Trade-off Matrix)
         rationale_lines = [
             f"Literal Argmax Optimization: Evaluated {len(evaluated_candidates)} physical candidate actions.",
             f"Objective Function: J(a) = {self.w_recovery:.2f}*(Recovery/100) - {self.w_time:.2f}*(t_exec/{self.t_max_seconds:.0f}s) - {self.w_risk:.2f}*Risk.",
             f"Selected Action '{winner.action_title}' (ID: {winner.action_id}) achieved maximum utility J = {winner.utility_score:.4f}.",
             f"Trade-off Profile: {winner.recovery_percentage:.1f}% Recovery in {winner.execution_time_seconds:.0f}s (Operational Risk: {winner.operational_risk_score:.2f}).",
+            f"Actuation Mode: {actuation_mode}.",
         ]
         alternatives = [c for i, c in enumerate(evaluated_candidates) if i != best_idx]
         alt_summaries = [
@@ -564,14 +589,34 @@ class RemediationOptimizer:
         if alt_summaries:
             rationale_lines.append(f"Rejected Alternatives: {'; '.join(alt_summaries)}.")
         rationale = " ".join(rationale_lines)
-        
+
+        # P4.1: Emit structured actuation signal to stdout for EMERGENCY actions
+        # A real field controller can pipe stdout to trigger hardware responses.
+        if actuation_mode == "EMERGENCY":
+            actuation_signal = {
+                "actuation_mode": "EMERGENCY",
+                "action_id": winner.action_id,
+                "fault_class": fault_class,
+                "alarm_severity": severity,
+                "action_title": winner.action_title,
+                "target_subsystem": winner.target_subsystem,
+                "execution_time_seconds": winner.execution_time_seconds,
+                "current_qber": round(curr_qber, 4),
+                "trigger": "Q_SENTINEL_AUTONOMOUS_EMERGENCY_RESPONSE",
+            }
+            print(
+                f"[Q-SENTINEL EMERGENCY ACTUATION] {json.dumps(actuation_signal)}",
+                file=sys.stderr,
+                flush=True,
+            )
+
         return RemediationRecommendation(
             action_id=winner.action_id,
             action_title=winner.action_title,
             action_description=winner.action_description,
             target_subsystem=winner.target_subsystem,
             alarm_severity=severity,
-            is_advisory_only=True,
+            is_advisory_only=(actuation_mode == "ADVISORY"),
             current_qber=round(curr_qber, 4),
             expected_post_action_qber=winner.projected_qber,
             current_skr_bps=round(curr_skr, 1),
@@ -596,4 +641,5 @@ class RemediationOptimizer:
                 "w_risk": self.w_risk,
                 "t_max_seconds": self.t_max_seconds,
             },
+            actuation_mode=actuation_mode,
         )

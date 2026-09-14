@@ -7,7 +7,7 @@ Author: Senior Quantum Systems & Applied ML Engineering Team
 
 import numpy as np
 import collections
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 from physics_engine.quantum_telemetry_emulator import QuantumTelemetrySample
 
 
@@ -91,6 +91,31 @@ class TelemetryFeatureExtractor:
         if denom == 0:
             return 0.0
         return float(np.sum((dt - dt_mean) * (values - val_mean)) / denom)
+
+    @staticmethod
+    def _compute_slope_with_se(values: np.ndarray, timestamps: np.ndarray) -> Tuple[float, float]:
+        """
+        P2.5: Computes linear least-squares slope AND its standard error.
+
+        Returns:
+            (slope, slope_standard_error)
+        """
+        n = len(values)
+        if n < 3:
+            return 0.0, 0.0002  # default SE when window too small
+        dt = timestamps - timestamps[0]
+        if np.all(dt == 0):
+            return 0.0, 0.0002
+        dt_mean = np.mean(dt)
+        val_mean = np.mean(values)
+        ss_xx = np.sum((dt - dt_mean) ** 2)
+        if ss_xx < 1e-20:
+            return 0.0, 0.0002
+        slope = float(np.sum((dt - dt_mean) * (values - val_mean)) / ss_xx)
+        residuals = values - (val_mean + slope * (dt - dt_mean))
+        mse = float(np.sum(residuals ** 2) / max(1, n - 2))
+        se = float(np.sqrt(mse / ss_xx))
+        return slope, se
 
     @staticmethod
     def _compute_acceleration(values: np.ndarray, timestamps: np.ndarray) -> float:
@@ -192,7 +217,9 @@ class TelemetryFeatureExtractor:
             "jitter_roll_mean_25": float(np.mean(jit_arr)),
             
             # 4. Temporal Derivatives
+            # P2.5: qber slope computed with SE for PTCT confidence interval
             "qber_slope_25": self._compute_slope(qber_arr, ts_arr),
+            "qber_slope_25_se": self._compute_slope_with_se(qber_arr, ts_arr)[1],  # SE sidecar
             "qber_acceleration_25": self._compute_acceleration(qber_arr, ts_arr),
             "raw_counts_slope_25": self._compute_slope(cnt_arr, ts_arr),
             "dark_counts_slope_25": self._compute_slope(dcr_arr, ts_arr),

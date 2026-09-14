@@ -161,6 +161,11 @@ class QuantumTelemetryEmulator:
             
         elif is_timeshift:
             # Time-shift attack: gate timing offset / asymmetry (130 - 220 ps)
+            # P4.4: Also model basis-dependent detection efficiency mismatch.
+            # In a real time-shift attack Eve shifts the gate window so that one
+            # basis (e.g. H/V) has significantly lower detection efficiency than
+            # the other (+/- 45 basis). This creates an asymmetric click pattern
+            # that differs from hardware timing jitter (which affects all bases equally).
             jitter = self.config.nominal_timing_jitter_ps + 70.0 + 85.0 * intensity
 
         # Add micro-fluctuations (shot noise & physical drift)
@@ -207,8 +212,22 @@ class QuantumTelemetryEmulator:
         
         # If Time-Shift Attack, add characteristic basis-dependent shift error
         if is_timeshift:
-            # Time-shift creates additional error clicks from gate boundary clipping
-            qber_shift_delta = 0.055 + 0.050 * intensity
+            # P4.4: Physically correct time-shift model.
+            # Step 1 — Basis-dependent efficiency mismatch:
+            #   H-basis detection efficiency is reduced by up to 40% (intensity-scaled),
+            #   +45-basis remains at nominal.  This asymmetry is the signature that
+            #   distinguishes a time-shift attack from hardware timing jitter.
+            eta_mismatch = 0.40 * intensity          # fraction of H-basis clicks suppressed
+            # Effective detection probability for H-basis pulses
+            eta_h  = self.bob_efficiency * (1.0 - eta_mismatch)
+            eta_45 = self.bob_efficiency              # unaffected basis
+            # Combined average yield (equal basis probability in BB84)
+            avg_eta = 0.5 * eta_h + 0.5 * eta_45
+            # Recompute signal yield and QBER under the mismatch model
+            signal_yield_ts = compute_signal_yield(eta_channel, avg_eta / self.bob_efficiency, self.mean_photon_number)
+            # Basis mismatch introduces extra QBER: Eve's shifted window maps H→+45 errors
+            qber_mismatch_term = 0.5 * eta_mismatch * signal_yield_ts / max(1e-15, y0 + signal_yield_ts)
+            qber_shift_delta = qber_mismatch_term + 0.025 * intensity   # additional Bob-side frame error
             qber = float(np.clip(qber + qber_shift_delta, 0.0, 0.50))
             
         # Add physical counting fluctuation to QBER

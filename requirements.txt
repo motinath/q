@@ -1,0 +1,14 @@
+# Q-SENTINEL - Minimal Requirements (Python 3.10 ONLY)
+# These are the absolute minimum packages needed
+
+numpy
+pandas
+scipy
+scikit-learn
+lightgbm
+joblib
+streamlit
+matplotlib
+plotly
+pytest
+requests

@@ -197,7 +197,9 @@ class PhysicalInvariantValidator:
                 explanation = f"Contradiction: ML predicted Time-Shift attack, but timing jitter ({jitter:.1f} ps) is nominal or error is explained by optical visibility drop."
 
         elif ml_predicted_class == "Normal":
-            if qber < 0.040 and vis >= 0.970 and temp <= -37.0 and dcr <= 1000.0 and raw_cnt > 20000.0:
+            # P2.2: Nominal raw count rate on a 25 km SMF-28 link at 100 MHz is ~2.37 Mcps.
+            # Previous threshold of 20000 Hz was 100× too low; corrected to 500000 Hz.
+            if qber < 0.040 and vis >= 0.970 and temp <= -37.0 and dcr <= 1000.0 and raw_cnt > 5.0e5:
                 status = "ML + Physics Agree"
                 consistency_score = 0.98
                 signature = "Nominal Optical Channel Baseline"

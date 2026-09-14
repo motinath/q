@@ -1,6 +1,13 @@
 """
 Layer 4 — ML Root-Cause Attribution (LightGBM Classifier) with Physics Verification
-Multi-class diagnosis across 7 physical operational and security states.
+Multi-class diagnosis across 10 physical operational and security states.
+
+P3.3: Added isotonic regression probability calibration.
+  - After fitting the LightGBM model, a per-class isotonic regressor is fitted on
+    the validation split (or training split when no separate val data is provided).
+  - At inference time, raw LightGBM probabilities are passed through the calibrators
+    before the physics Bayesian update, converting raw scores to proper posteriors.
+
 Author: Senior Quantum Systems & Applied ML Engineering Team
 """
 
@@ -10,6 +17,7 @@ import numpy as np
 import lightgbm as lgb
 from typing import Dict, Any, List, Optional, Tuple
 from dataclasses import dataclass
+from sklearn.isotonic import IsotonicRegression
 
 from config.qkd_system_parameters import (
     ROOT_CAUSE_CLASSES,
@@ -64,11 +72,15 @@ class LightGBMRootCauseClassifier:
             n_jobs=1,
         )
         self.is_fitted: bool = False
+        # P3.3: Per-class isotonic regression calibrators (one per class).
+        # Populated by fit_calibration(); None until then (raw probs used as fallback).
+        self._calibrators: Optional[List[IsotonicRegression]] = None
+        self.is_calibrated: bool = False
 
     def fit(self, X_train: np.ndarray, y_train: np.ndarray) -> None:
         """
         Fits LightGBM on training feature matrix and ground truth class labels.
-        
+
         Args:
             X_train: Array of shape (n_samples, n_features)
             y_train: Integer array of shape (n_samples,) corresponding to ROOT_CAUSE_LABEL_TO_ID
@@ -78,6 +90,64 @@ class LightGBMRootCauseClassifier:
             
         self.model.fit(X_train, y_train)
         self.is_fitted = True
+
+    def fit_calibration(
+        self,
+        X_val: np.ndarray,
+        y_val: np.ndarray,
+    ) -> None:
+        """
+        P3.3: Fits per-class isotonic regression calibrators on a held-out validation set.
+
+        Uses the "one-vs-rest" strategy: for each class c, fit an isotonic regressor
+        that maps the model's raw P(class=c) scores to true empirical probabilities on
+        the validation data.  After re-normalization across classes, the resulting
+        probability vector is a proper calibrated posterior.
+
+        Should be called AFTER fit() using the 15-run validation split from the
+        data split manifest (previously unused).
+
+        Args:
+            X_val: Validation feature matrix, shape (n_val, n_features).
+            y_val: Validation integer labels, shape (n_val,).
+        """
+        if not self.is_fitted:
+            raise RuntimeError("Model must be fitted before calibration.")
+        if len(X_val) == 0:
+            raise ValueError("Calibration dataset cannot be empty.")
+
+        raw_probs = self.model.predict_proba(X_val)   # (n_val, n_classes)
+        n_classes = len(ROOT_CAUSE_CLASSES)
+        self._calibrators = []
+
+        for c in range(n_classes):
+            # Binary label: 1 if true class == c, else 0
+            binary_labels = (y_val == c).astype(float)
+            scores = raw_probs[:, c]
+
+            ir = IsotonicRegression(out_of_bounds="clip")
+            ir.fit(scores, binary_labels)
+            self._calibrators.append(ir)
+
+        self.is_calibrated = True
+
+    def _apply_calibration(self, raw_probs: np.ndarray) -> np.ndarray:
+        """
+        P3.3: Applies per-class isotonic calibration then re-normalizes.
+        Falls back to raw probabilities when calibrators are not fitted.
+        """
+        if not self.is_calibrated or self._calibrators is None:
+            return raw_probs
+        cal = np.array([
+            float(self._calibrators[c].predict([raw_probs[c]])[0])
+            for c in range(len(ROOT_CAUSE_CLASSES))
+        ], dtype=np.float64)
+        total = cal.sum()
+        if total > 0:
+            cal /= total
+        else:
+            cal = np.ones(len(ROOT_CAUSE_CLASSES)) / len(ROOT_CAUSE_CLASSES)
+        return cal
 
     def predict_sample(
         self,
@@ -96,51 +166,62 @@ class LightGBMRootCauseClassifier:
             
         vector = np.array([[feature_dict[col] for col in FEATURE_COLUMN_NAMES]], dtype=np.float64)
         raw_probs = self.model.predict_proba(vector)[0]
-        
+
+        # P3.3: Apply isotonic calibration when available
+        calibrated_base = self._apply_calibration(raw_probs)
+
         raw_prob_dict = {
             ROOT_CAUSE_ID_TO_LABEL[i]: float(raw_probs[i])
             for i in range(len(ROOT_CAUSE_CLASSES))
         }
         
-        # Physics Verification Step
-        calibrated_probs = raw_probs.copy()
+        # Physics Verification Step — P1.3: canonical class names; P3.4: proper Bayesian update
+        calibrated_probs = calibrated_base.copy()
         physics_adjustment = 0.0
         is_verified = False
-        
+
         if physics_validation is not None:
             mod = physics_validation.physics_confidence_modifier
             sig = physics_validation.primary_physical_signature
-            
-            # Signature-to-class alignment
+
+            # Signature-to-class alignment using EXACT canonical names from ROOT_CAUSE_LABEL_TO_ID.
+            # Previous bug: used "Channel Attenuation" and "APD Aging" which are not in the dict.
             target_class = None
             if "Intercept-Resend" in sig:
                 target_class = "Intercept-Resend"
             elif "Attenuation" in sig:
-                target_class = "Channel Attenuation"
+                target_class = "Channel Attenuation Event"        # P1.3 fix: canonical name
             elif "Thermal" in sig:
                 target_class = "Thermal Drift"
             elif "Misalignment" in sig:
                 target_class = "Optical Misalignment"
-            elif "Aging" in sig or "Trap" in sig:
-                target_class = "APD Aging"
+            elif "Aging" in sig or "Trap" in sig or "Degradation" in sig:
+                target_class = "Detector APD Degradation"         # P1.3 fix: canonical name
+            elif "Blinding" in sig or "Saturation" in sig:
+                target_class = "Detector Blinding"
+            elif "PNS" in sig or "Splitting" in sig or "Yield Collapse" in sig:
+                target_class = "Photon Number Splitting"
+            elif "Time-Shift" in sig or "Asymmetry" in sig or "Gating Window" in sig:
+                target_class = "Time-Shift Attack"
             elif "Jitter" in sig:
                 target_class = "Timing Jitter"
-            elif "False Positive" in sig or "Nominal" in sig:
+            elif "Nominal" in sig or "False Positive" in sig or "Baseline" in sig:
                 target_class = "Normal"
-                
+
             if target_class is not None and target_class in ROOT_CAUSE_LABEL_TO_ID:
+                # P3.4: Proper multiplicative Bayesian posterior update.
+                # Likelihood ratio: physics_modifier is in (-1, 1].
+                # likelihood_i = 1 + mod  for the physics-indicated class,
+                # likelihood_j = 1.0      for all other classes.
+                # posterior_i = prior_i * likelihood_i / Z  where Z = sum(prior_j * likelihood_j)
                 idx = ROOT_CAUSE_LABEL_TO_ID[target_class]
+                likelihood = np.ones(len(ROOT_CAUSE_CLASSES), dtype=np.float64)
+                likelihood[idx] = max(0.01, 1.0 + mod)   # never drive to exactly 0
+                calibrated_probs = raw_probs * likelihood
+                physics_adjustment = mod
                 if mod > 0:
-                    calibrated_probs[idx] += mod
                     is_verified = True
-                    physics_adjustment = mod
-                elif mod < 0:
-                    # Penalize target anomaly class, boost Normal
-                    normal_idx = ROOT_CAUSE_LABEL_TO_ID["Normal"]
-                    calibrated_probs[normal_idx] += abs(mod)
-                    calibrated_probs[idx] = max(0.01, calibrated_probs[idx] - abs(mod))
-                    physics_adjustment = mod
-                    
+
         # Re-normalize probability vector
         sum_probs = np.sum(calibrated_probs)
         if sum_probs > 0:
@@ -168,13 +249,25 @@ class LightGBMRootCauseClassifier:
         )
 
     def save(self, model_path: str) -> None:
-        """Serializes LightGBM model artifact to disk."""
+        """Serializes LightGBM model artifact to disk.
+        P3.3: Also saves calibrators if fitted (as model_path + '.cal.joblib').
+        """
         os.makedirs(os.path.dirname(os.path.abspath(model_path)), exist_ok=True)
         joblib.dump(self.model, model_path)
+        if self.is_calibrated and self._calibrators is not None:
+            cal_path = model_path + ".cal.joblib"
+            joblib.dump(self._calibrators, cal_path)
 
     def load(self, model_path: str) -> None:
-        """Loads serialized LightGBM model from disk."""
+        """Loads serialized LightGBM model from disk.
+        P3.3: Automatically loads calibrators if the companion .cal.joblib file exists.
+        """
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model artifact not found at {model_path}")
         self.model = joblib.load(model_path)
         self.is_fitted = True
+        # Try loading calibrators
+        cal_path = model_path + ".cal.joblib"
+        if os.path.exists(cal_path):
+            self._calibrators = joblib.load(cal_path)
+            self.is_calibrated = True

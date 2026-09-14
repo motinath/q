@@ -64,9 +64,12 @@ def profile_pipeline_latencies(
         t_l2 = (time.perf_counter() - t_l2_start) * 1000.0
         layer2_latencies_ms.append(t_l2)
         
+        # Layer 4 (preliminary attribution, needed before physics validator)
+        raw_attr = orchestrator.classifier.predict_sample(feats, None)
+
         # Layer 3
         t_l3_start = time.perf_counter()
-        phys = orchestrator.physics_validator.evaluate(feats, anom.is_anomaly, anom.anomaly_score)
+        phys = orchestrator.physics_validator.evaluate(feats, raw_attr.predicted_class, raw_attr.confidence)
         t_l3 = (time.perf_counter() - t_l3_start) * 1000.0
         layer3_latencies_ms.append(t_l3)
         
@@ -84,7 +87,12 @@ def profile_pipeline_latencies(
         
         # Layer 6
         t_l6_start = time.perf_counter()
-        ptct = orchestrator.forecaster.compute_ptct(sample.qber, feats.get("qber_slope_5", 0.0))
+        ptct = orchestrator.forecaster.compute_ptct(
+            sample.qber,
+            feats.get("qber_slope_25", 0.0),
+            slope_standard_error=feats.get("qber_slope_25_se", 0.0002),
+            qber_acceleration=feats.get("qber_acceleration_25", 0.0),
+        )
         t_l6 = (time.perf_counter() - t_l6_start) * 1000.0
         layer6_latencies_ms.append(t_l6)
         

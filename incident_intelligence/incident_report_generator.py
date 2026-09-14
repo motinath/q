@@ -10,6 +10,7 @@ Author: Senior Quantum Systems & Applied ML Engineering Team
 
 import time
 import json
+import hashlib
 import datetime
 from io import BytesIO
 from typing import Dict, Any, List, Optional
@@ -100,9 +101,9 @@ class IncidentReportGenerator:
             for c in explainability.top_shap_contributions
         ]
         
-        # Generate tamper-evident audit hash of core fields
+        # P1.4: Generate real SHA-256 tamper-evident audit hash (replaces non-cryptographic Python hash())
         core_str = f"{incident_id}:{now_iso}:{attribution_result.predicted_class}:{physics_validation.validation_status}:{remediation.action_id}"
-        audit_hash = f"SHA256:{abs(hash(core_str)):016x}"
+        audit_hash = f"SHA256:{hashlib.sha256(core_str.encode('utf-8')).hexdigest()}"
         
         return IncidentReport(
             incident_id=incident_id,
@@ -155,7 +156,7 @@ class IncidentReportGenerator:
         ev = report.physical_evidence
         md.append(f"| Quantum Bit Error Rate (QBER) | {ev.get('measured_qber', 0)*100:.2f}% | Expected Physics: {ev.get('theoretical_physics_qber', 0)*100:.2f}% | % |")
         md.append(f"| Intrinsic Optical Error (e_opt) | {ev.get('expected_optical_error_e_opt', 0)*100:.2f}% | Fringe Visibility: {ev.get('visibility_measured', 0):.4f} | fraction |")
-        md.append(f"| Dark Count Rate (DCR) | {ev.get('raw_counts_hz', 0):.0f} / yield | Temp: {ev.get('detector_temp_celsius', 0):.1f} °C | Hz |")
+        md.append(f"| Dark Count Rate (DCR) | {ev.get('dark_counts_hz', ev.get('raw_counts_hz', 0)):.0f} Hz | Temp: {ev.get('detector_temp_celsius', 0):.1f} °C | Hz |")
         md.append(f"| Total Optical Channel Loss | {ev.get('total_channel_loss_db', 0):.2f} | Nominal: 5.00 dB | dB |")
         md.append(f"| Timing Jitter (FWHM) | {ev.get('timing_jitter_ps', 0):.1f} | Nominal: 65.0 ps | ps |\n")
         
@@ -368,7 +369,7 @@ class IncidentReportGenerator:
             ],
             [
                 Paragraph("Dark Count Rate (DCR)", tbl_cell),
-                Paragraph(f"{ev.get('raw_counts_hz', 0):.0f} / yield", tbl_cell),
+                Paragraph(f"{ev.get('dark_counts_hz', ev.get('raw_counts_hz', 0)):.0f} Hz", tbl_cell),
                 Paragraph(f"Detector APD Temperature: {ev.get('detector_temp_celsius', 0):.1f} °C", tbl_cell),
                 Paragraph("Hertz (cps)", tbl_cell),
             ],
