@@ -191,6 +191,37 @@ with st.sidebar:
         if st.button("🔄 Clear Faults", width="stretch"):
             orchestrator.emulator.reset_to_nominal()
             st.session_state.last_action_msg = "All faults cleared. Restored nominal physical state."
+
+    st.markdown("---")
+    st.subheader("🏆 Challenge Scenarios (1-Click Replay)")
+    st.caption("Reproducible evaluation scenarios per IITM-CDOT-SAMGNYA challenge scope")
+    
+    col_sc1, col_sc2 = st.columns(2)
+    with col_sc1:
+        if st.button("🌡️ Thermal Drift", width="stretch"):
+            orchestrator.emulator.reset_to_nominal()
+            orchestrator.emulator.inject_fault("Temperature Drift", intensity=0.75)
+            st.session_state.last_action_msg = "Replaying Scenario: Thermal Drift (TEC current drop -> QBER rise)"
+            for _ in range(3):
+                st.session_state.history.append(orchestrator.process_step(1.0))
+            st.rerun()
+
+    with col_sc2:
+        if st.button("🔀 Combined Fault", width="stretch"):
+            orchestrator.emulator.reset_to_nominal()
+            orchestrator.emulator.inject_fault("Combined Fault", intensity=0.70)
+            st.session_state.last_action_msg = "Replaying Scenario: Combined Fault (Thermal Drift + Polarization Misalignment)"
+            for _ in range(3):
+                st.session_state.history.append(orchestrator.process_step(1.0))
+            st.rerun()
+
+    if st.button("❓ Unfamiliar Condition (Zero-Day)", width="stretch"):
+        orchestrator.emulator.reset_to_nominal()
+        orchestrator.emulator.inject_fault("Unknown Fault", intensity=0.75)
+        st.session_state.last_action_msg = "Replaying Scenario: Unfamiliar Out-Of-Distribution Zero-Day Anomaly"
+        for _ in range(3):
+            st.session_state.history.append(orchestrator.process_step(1.0))
+        st.rerun()
             
     st.markdown("---")
     st.subheader("⏱️ Live Telemetry Stepping")

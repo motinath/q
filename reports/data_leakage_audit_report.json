@@ -1,0 +1,186 @@
+{
+  "audit_timestamp": "2026-09-17T08:30:36Z",
+  "dataset_path": "G:\\My Drive\\q\\data\\challenge_episodes.parquet",
+  "dataset_records": 120000,
+  "audit_1_data_leakage": {
+    "status": "PASS",
+    "feature_count": 34,
+    "leaked_features": [],
+    "run_overlap_count": 0,
+    "train_runs": 180,
+    "test_runs": 60,
+    "perfect_correlations": []
+  },
+  "audit_2_feature_importance": {
+    "status": "PASS",
+    "importance_per_fault": {
+      "Thermal Drift": {
+        "top_5": [
+          {
+            "feature": "dark_counts_hz",
+            "gain_pct": 67.17,
+            "splits": 417
+          },
+          {
+            "feature": "temperature_celsius",
+            "gain_pct": 21.15,
+            "splits": 465
+          },
+          {
+            "feature": "temp_roll_mean_25",
+            "gain_pct": 10.63,
+            "splits": 644
+          },
+          {
+            "feature": "count_to_dark_ratio",
+            "gain_pct": 0.45,
+            "splits": 236
+          },
+          {
+            "feature": "dark_counts_roll_mean_25",
+            "gain_pct": 0.36,
+            "splits": 254
+          }
+        ],
+        "cheating_features_detected": []
+      },
+      "Optical Misalignment": {
+        "top_5": [
+          {
+            "feature": "visibility",
+            "gain_pct": 93.81,
+            "splits": 293
+          },
+          {
+            "feature": "qber",
+            "gain_pct": 2.85,
+            "splits": 417
+          },
+          {
+            "feature": "optical_error_ratio",
+            "gain_pct": 2.39,
+            "splits": 339
+          },
+          {
+            "feature": "skr_bps",
+            "gain_pct": 0.73,
+            "splits": 100
+          },
+          {
+            "feature": "skr_to_qber_ratio",
+            "gain_pct": 0.07,
+            "splits": 75
+          }
+        ],
+        "cheating_features_detected": []
+      },
+      "Increased Channel Loss": {
+        "top_5": [
+          {
+            "feature": "raw_counts_hz",
+            "gain_pct": 94.89,
+            "splits": 264
+          },
+          {
+            "feature": "channel_attenuation_db",
+            "gain_pct": 2.94,
+            "splits": 229
+          },
+          {
+            "feature": "raw_counts_roll_mean_25",
+            "gain_pct": 1.86,
+            "splits": 279
+          },
+          {
+            "feature": "raw_counts_slope_25",
+            "gain_pct": 0.16,
+            "splits": 218
+          },
+          {
+            "feature": "count_to_dark_ratio",
+            "gain_pct": 0.04,
+            "splits": 169
+          }
+        ],
+        "cheating_features_detected": []
+      }
+    }
+  },
+  "audit_3_confusion_matrices": {
+    "status": "PASS",
+    "png_path": "reports\\confusion_matrix.png",
+    "contingency_table": {
+      "Thermal Drift": {
+        "TP": 4960,
+        "FP": 1,
+        "FN": 0,
+        "TN": 19039
+      },
+      "Optical Misalignment": {
+        "TP": 4960,
+        "FP": 0,
+        "FN": 0,
+        "TN": 19040
+      },
+      "Increased Channel Loss": {
+        "TP": 2479,
+        "FP": 0,
+        "FN": 1,
+        "TN": 21520
+      }
+    }
+  },
+  "audit_4_noise_stress_test": {
+    "status": "PASS",
+    "noise_levels": {
+      "0pct_noise": {
+        "Thermal Drift": 0.9999,
+        "Optical Misalignment": 1.0,
+        "Increased Channel Loss": 0.9998,
+        "mean_f1": 0.9999
+      },
+      "10pct_noise": {
+        "Thermal Drift": 0.8822,
+        "Optical Misalignment": 0.9985,
+        "Increased Channel Loss": 0.9951,
+        "mean_f1": 0.9586
+      },
+      "20pct_noise": {
+        "Thermal Drift": 0.7293,
+        "Optical Misalignment": 0.9963,
+        "Increased Channel Loss": 0.9824,
+        "mean_f1": 0.9026
+      },
+      "30pct_noise": {
+        "Thermal Drift": 0.6723,
+        "Optical Misalignment": 0.9942,
+        "Increased Channel Loss": 0.9597,
+        "mean_f1": 0.8754
+      }
+    }
+  },
+  "audit_5_blind_unknown_faults": {
+    "status": "PASS",
+    "scenarios": {
+      "Laser Wavelength Drift": {
+        "mechanism": "Laser diode thermal tuning shifts lambda 1550nm -> 1552nm, causing chromatic dispersion pulse spread.",
+        "rejection_rate": 1.0,
+        "hallucinated_classes": [],
+        "safe": true
+      },
+      "Sync Clock Phase Jitter": {
+        "mechanism": "Clock reference phase noise injects 280 ps timing jitter without APD thermal rise.",
+        "rejection_rate": 1.0,
+        "hallucinated_classes": [],
+        "safe": true
+      },
+      "Detector Saturation / Blinding": {
+        "mechanism": "Bright CW illumination collapses SPAD quenching, exploding count rate to 12 MHz.",
+        "rejection_rate": 1.0,
+        "hallucinated_classes": [],
+        "safe": true
+      }
+    }
+  },
+  "all_audits_passed": true
+}

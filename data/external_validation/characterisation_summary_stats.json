@@ -1,0 +1,210 @@
+{
+  "production": {
+    "dataset": "Toshiba LE Production",
+    "total_records": 17274,
+    "positive_skr_records": 17274,
+    "voa_range_dB": [
+      6.0,
+      30.0
+    ],
+    "mean_SKR_bps": 687811.6,
+    "min_SKR_bps": 541,
+    "max_SKR_bps": 2758846,
+    "std_SKR_bps": 646536.8,
+    "mean_QBER": 0.023813,
+    "min_QBER": 0.0166,
+    "max_QBER": 0.0706
+  },
+  "production_25": {
+    "dataset": "Toshiba LE Production (25/point)",
+    "total_records": 6024,
+    "positive_skr_records": 6024,
+    "voa_range_dB": [
+      6.0,
+      30.0
+    ],
+    "mean_SKR_bps": 503070.9,
+    "min_SKR_bps": 541,
+    "max_SKR_bps": 2648667,
+    "std_SKR_bps": 621112.3,
+    "mean_QBER": 0.027745,
+    "min_QBER": 0.017,
+    "max_QBER": 0.0706
+  },
+  "research": {
+    "dataset": "Toshiba LE Research",
+    "total_records": 663,
+    "positive_skr_records": 580,
+    "voa_range_dB": [
+      6.0,
+      30.0
+    ],
+    "mean_SKR_bps": 444351.7,
+    "min_SKR_bps": 29,
+    "max_SKR_bps": 2169195,
+    "std_SKR_bps": 530527.8,
+    "mean_QBER": 0.031811,
+    "min_QBER": 0.016,
+    "max_QBER": 0.0745
+  },
+  "clavis3": {
+    "dataset": "IDQ Clavis3",
+    "total_records": 769,
+    "positive_skr_records": 762,
+    "voa_range_dB": [
+      10.0,
+      17.6
+    ],
+    "mean_SKR_bps": 1093.8,
+    "min_SKR_bps": 10,
+    "max_SKR_bps": 2441,
+    "std_SKR_bps": 662.0,
+    "mean_QBER": 0.027031,
+    "min_QBER": 0.005828,
+    "max_QBER": 0.052138
+  },
+  "clavisxgr": {
+    "dataset": "IDQ ClavisXGR",
+    "total_records": 23409,
+    "positive_skr_records": 23409,
+    "voa_range_dB": [
+      6.0,
+      30.6
+    ],
+    "mean_SKR_bps": 4374.0,
+    "min_SKR_bps": 143,
+    "max_SKR_bps": 6755,
+    "std_SKR_bps": 1732.5,
+    "mean_QBER": 0.009818,
+    "min_QBER": 0.00094,
+    "max_QBER": 0.056962
+  },
+  "perturb_baseline": {
+    "dataset": "Perturbation: baseline",
+    "total_records": 315,
+    "positive_skr_records": 315,
+    "voa_range_dB": [
+      9.0,
+      15.0
+    ],
+    "mean_SKR_bps": 730536.2,
+    "min_SKR_bps": 268569,
+    "max_SKR_bps": 1346019,
+    "std_SKR_bps": 360952.9,
+    "mean_QBER": 0.021462,
+    "min_QBER": 0.0155,
+    "max_QBER": 0.0309
+  },
+  "perturb_1s_settling": {
+    "dataset": "Perturbation: 1s_settling",
+    "total_records": 312,
+    "positive_skr_records": 312,
+    "voa_range_dB": [
+      9.0,
+      15.0
+    ],
+    "mean_SKR_bps": 618790.3,
+    "min_SKR_bps": 204510,
+    "max_SKR_bps": 1212025,
+    "std_SKR_bps": 321066.6,
+    "mean_QBER": 0.021762,
+    "min_QBER": 0.0139,
+    "max_QBER": 0.0356
+  },
+  "perturb_2s_settling": {
+    "dataset": "Perturbation: 2s_settling",
+    "total_records": 312,
+    "positive_skr_records": 312,
+    "voa_range_dB": [
+      9.0,
+      15.0
+    ],
+    "mean_SKR_bps": 618546.8,
+    "min_SKR_bps": 176326,
+    "max_SKR_bps": 1248864,
+    "std_SKR_bps": 315574.3,
+    "mean_QBER": 0.021359,
+    "min_QBER": 0.0147,
+    "max_QBER": 0.0324
+  },
+  "perturb_5s_settling": {
+    "dataset": "Perturbation: 5s_settling",
+    "total_records": 312,
+    "positive_skr_records": 312,
+    "voa_range_dB": [
+      9.0,
+      15.0
+    ],
+    "mean_SKR_bps": 614357.6,
+    "min_SKR_bps": 233695,
+    "max_SKR_bps": 1255570,
+    "std_SKR_bps": 307453.4,
+    "mean_QBER": 0.02163,
+    "min_QBER": 0.0156,
+    "max_QBER": 0.0334
+  },
+  "perturb_20s_settling": {
+    "dataset": "Perturbation: 20s_settling",
+    "total_records": 312,
+    "positive_skr_records": 312,
+    "voa_range_dB": [
+      9.0,
+      15.0
+    ],
+    "mean_SKR_bps": 629543.1,
+    "min_SKR_bps": 152617,
+    "max_SKR_bps": 1297417,
+    "std_SKR_bps": 327109.1,
+    "mean_QBER": 0.02129,
+    "min_QBER": 0.0151,
+    "max_QBER": 0.0371
+  },
+  "perturb_continuous": {
+    "dataset": "Perturbation: continuous",
+    "total_records": 312,
+    "positive_skr_records": 312,
+    "voa_range_dB": [
+      9.0,
+      15.0
+    ],
+    "mean_SKR_bps": 552446.3,
+    "min_SKR_bps": 187779,
+    "max_SKR_bps": 1094124,
+    "std_SKR_bps": 285223.3,
+    "mean_QBER": 0.02188,
+    "min_QBER": 0.0154,
+    "max_QBER": 0.0319
+  },
+  "perturb_continuous_noisy": {
+    "dataset": "Perturbation: continuous_noisy",
+    "total_records": 312,
+    "positive_skr_records": 312,
+    "voa_range_dB": [
+      9.0,
+      15.0
+    ],
+    "mean_SKR_bps": 550032.6,
+    "min_SKR_bps": 178285,
+    "max_SKR_bps": 1210502,
+    "std_SKR_bps": 296659.3,
+    "mean_QBER": 0.021413,
+    "min_QBER": 0.0148,
+    "max_QBER": 0.0379
+  },
+  "perturb_random": {
+    "dataset": "Perturbation: random",
+    "total_records": 312,
+    "positive_skr_records": 312,
+    "voa_range_dB": [
+      9.0,
+      15.0
+    ],
+    "mean_SKR_bps": 560446.6,
+    "min_SKR_bps": 193781,
+    "max_SKR_bps": 1094582,
+    "std_SKR_bps": 288869.9,
+    "mean_QBER": 0.021443,
+    "min_QBER": 0.0161,
+    "max_QBER": 0.0316
+  }
+}

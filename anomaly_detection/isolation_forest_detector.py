@@ -44,10 +44,12 @@ class IsolationForestAnomalyDetector:
         contamination: float = "auto",   # P2.4: was 0.05 (biases boundary on clean data)
         n_estimators: int = 60,
         random_state: int = 42,
+        decision_threshold: float = 0.52,
     ):
         self.contamination = contamination
         self.n_estimators = n_estimators
         self.random_state = random_state
+        self.decision_threshold = decision_threshold
 
         self.scaler: StandardScaler = StandardScaler()
         self.model: IsolationForest = IsolationForest(
@@ -111,6 +113,20 @@ class IsolationForestAnomalyDetector:
             telemetry_features=feature_dict,
             baseline_violations={},
         )
+
+    def score_samples(self, X: np.ndarray) -> np.ndarray:
+        """Returns normalized anomaly scores in [0, 1] for batch array X."""
+        if not self.is_fitted:
+            raise RuntimeError("AnomalyDetector must be trained or loaded before prediction.")
+        X_scaled = self.scaler.transform(X)
+        raw_scores = self.model.decision_function(X_scaled)
+        return np.clip(0.50 - (raw_scores * 2.5), 0.0, 1.0)
+
+    def predict(self, X: np.ndarray, threshold: Optional[float] = None) -> np.ndarray:
+        """Returns binary anomaly predictions (1 for anomaly, 0 for nominal) for batch array X."""
+        scores = self.score_samples(X)
+        th = threshold if threshold is not None else getattr(self, "decision_threshold", 0.52)
+        return (scores >= th).astype(int)
 
     def predict_sample_with_baseline_gate(
         self,

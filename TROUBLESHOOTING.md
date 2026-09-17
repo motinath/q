@@ -1,4 +1,4 @@
-# Q-SENTINEL Troubleshooting Guide
+# VECTOR-Q Troubleshooting Guide
 
 This guide covers common issues and solutions.
 
@@ -8,23 +8,23 @@ This guide covers common issues and solutions.
 
 ### Issue: "ModuleNotFoundError" when running scripts
 
-**Cause**: Python can't find the Q-SENTINEL modules
+**Cause**: Python can't find the VECTOR-Q modules
 
 **Solutions**:
 
 ```bash
 # Solution 1: Run from project root
-cd path/to/q-sentinel
+cd path/to/vector-q
 python scripts/train_attribution_models.py
 
 # Solution 2: Use pytest (automatically adds project to path)
 python -m pytest tests/run_basic_test.py -v -s
 
 # Solution 3: Add to PYTHONPATH (Windows)
-$env:PYTHONPATH = "path\to\q-sentinel"
+$env:PYTHONPATH = "path\to\vector-q"
 
 # Solution 3: Add to PYTHONPATH (Linux/Mac)
-export PYTHONPATH="/path/to/q-sentinel:$PYTHONPATH"
+export PYTHONPATH="/path/to/vector-q:$PYTHONPATH"
 ```
 
 ---
@@ -140,12 +140,12 @@ python tests/run_basic_test.py
 **Solution**:
 
 ```bash
-# Close all Q-SENTINEL processes
+# Close all VECTOR-Q processes
 # Delete the lock file
-rm q_sentinel_audit.db-journal
+rm vector_q_audit.db-journal
 
 # Or use a new database
-rm q_sentinel_audit.db
+rm vector_q_audit.db
 ```
 
 ---
@@ -313,7 +313,7 @@ This will check:
 
 ```bash
 # View audit log
-sqlite3 q_sentinel_audit.db "SELECT * FROM audit_log ORDER BY timestamp DESC LIMIT 10;"
+sqlite3 vector_q_audit.db "SELECT * FROM qkd_telemetry_events ORDER BY timestamp DESC LIMIT 10;"
 
 # Check model files
 ls -lh models/

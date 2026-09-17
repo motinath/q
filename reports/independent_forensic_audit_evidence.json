@@ -1,0 +1,198 @@
+{
+  "checkpoint_1_train_test_leakage": {
+    "train_samples": 72000,
+    "test_samples": 24000,
+    "duplicate_rows": 0,
+    "status": "PASS"
+  },
+  "checkpoint_2_run_id_leakage": {
+    "metadata_in_features": [],
+    "cheating_in_trees": [],
+    "status": "PASS"
+  },
+  "checkpoint_3_split_contamination": {
+    "train_runs_count": 180,
+    "test_runs_count": 60,
+    "cal_runs_count": 30,
+    "val_runs_count": 30,
+    "train_test_overlap": 0,
+    "status": "PASS"
+  },
+  "checkpoint_4_target_derived_features": {
+    "direct_target_overlap": [],
+    "suspicious_proxies": [],
+    "top_correlations": {
+      "has_thermal_drift": [
+        [
+          "temperature_celsius",
+          0.9950701807055464
+        ],
+        [
+          "dark_counts_hz",
+          0.9706619103595141
+        ],
+        [
+          "temp_roll_mean_25",
+          0.9651216078261137
+        ]
+      ],
+      "has_misalignment": [
+        [
+          "visibility",
+          -0.8956791311718062
+        ],
+        [
+          "optical_error_ratio",
+          0.895679131171806
+        ],
+        [
+          "visibility_roll_mean_25",
+          -0.86547576943796
+        ]
+      ],
+      "has_channel_loss": [
+        [
+          "channel_attenuation_db",
+          0.9304167277195488
+        ],
+        [
+          "raw_counts_hz",
+          -0.8103869701643134
+        ],
+        [
+          "raw_counts_roll_mean_25",
+          -0.788559822859767
+        ]
+      ],
+      "is_anomaly": [
+        [
+          "skr_bps",
+          -0.8153654474329982
+        ],
+        [
+          "skr_to_qber_ratio",
+          -0.8118913696586385
+        ],
+        [
+          "count_to_dark_ratio",
+          -0.7861894502476336
+        ]
+      ]
+    },
+    "status": "PASS"
+  },
+  "checkpoint_5_future_information": {
+    "lookaheads_in_X": [],
+    "forecaster_lookahead_overlap": [],
+    "status": "PASS"
+  },
+  "checkpoints_6_7_8_metrics": {
+    "per_class": {
+      "Thermal Drift": {
+        "support": 4960,
+        "TP": 4708,
+        "FP": 0,
+        "FN": 252,
+        "TN": 19040,
+        "precision": 1.0,
+        "recall": 0.9492,
+        "f1": 0.9739
+      },
+      "Optical Misalignment": {
+        "support": 4960,
+        "TP": 4561,
+        "FP": 0,
+        "FN": 399,
+        "TN": 19040,
+        "precision": 1.0,
+        "recall": 0.9196,
+        "f1": 0.9581
+      },
+      "Increased Channel Loss": {
+        "support": 2480,
+        "TP": 2399,
+        "FP": 1,
+        "FN": 81,
+        "TN": 21519,
+        "precision": 0.9996,
+        "recall": 0.9673,
+        "f1": 0.9832
+      },
+      "Combined (Thermal+Misalign)": {
+        "support": 2480,
+        "TP": 2261,
+        "FP": 0,
+        "FN": 219,
+        "TN": 21520,
+        "precision": 1.0,
+        "recall": 0.9117,
+        "f1": 0.9538
+      },
+      "Normal (Zero Faults)": {
+        "support": 10525,
+        "TP": 10524,
+        "FP": 0,
+        "FN": 1,
+        "TN": 13475,
+        "precision": 1.0,
+        "recall": 0.9999,
+        "f1": 1.0
+      }
+    },
+    "macro_f1": 0.9717333333333333,
+    "contingency_matrix": {
+      "Thermal Drift": {
+        "TP": 4708,
+        "FP": 0,
+        "FN": 252,
+        "TN": 19040
+      },
+      "Optical Misalignment": {
+        "TP": 4561,
+        "FP": 0,
+        "FN": 399,
+        "TN": 19040
+      },
+      "Increased Channel Loss": {
+        "TP": 2399,
+        "FP": 1,
+        "FN": 81,
+        "TN": 21519
+      }
+    },
+    "image_path": "G:\\My Drive\\q\\reports\\forensic_unseen_test_confusion_matrix.png"
+  },
+  "checkpoint_9_ood_isolation": {
+    "unfamiliar_in_raw_train_partition": 10565,
+    "training_filter_enforced": true,
+    "centroid_clusters": [
+      "normal",
+      "thermal_drift",
+      "misalignment",
+      "channel_loss"
+    ],
+    "has_unknown_centroid": false,
+    "status": "PASS"
+  },
+  "checkpoint_10_physical_justification": {
+    "thermal_drift": {
+      "normal_mean": -40.0,
+      "fault_mean": -7.52,
+      "delta_sigma": 11.38,
+      "fisher_ratio": 129.59
+    },
+    "optical_misalignment": {
+      "normal_mean": 0.9607,
+      "fault_mean": 0.796,
+      "delta_sigma": 3.63,
+      "fisher_ratio": 13.18
+    },
+    "channel_loss": {
+      "normal_mean": 5.76,
+      "fault_mean": 14.63,
+      "delta_sigma": 5.77,
+      "fisher_ratio": 33.33
+    },
+    "conclusion": "Physically justified macroscopic state separability. Zero data leakage detected."
+  }
+}

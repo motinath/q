@@ -193,7 +193,7 @@ class RemediationOptimizer:
         # 1. Generate candidate definitions per diagnosed class (ADD-3: >= 3 candidates per mode: Actions A, B, C)
         candidate_defs: List[Dict[str, Any]] = []
         
-        if fault_class == "Optical Misalignment":
+        if fault_class in ["Polarization Drift", "Optical Misalignment"]:
             candidate_defs = [
                 {
                     "id": "ACTION_POLARIZATION_RECALIBRATION",
@@ -224,7 +224,7 @@ class RemediationOptimizer:
                 },
             ]
             
-        elif fault_class in ["Channel Attenuation Event", "Channel Attenuation"]:
+        elif fault_class in ["Fiber Bend", "Channel Attenuation Event", "Channel Attenuation"]:
             candidate_defs = [
                 {
                     "id": "ACTION_SWITCH_ALTERNATE_LINK",
@@ -255,7 +255,7 @@ class RemediationOptimizer:
                 },
             ]
             
-        elif fault_class in ["Detector APD Degradation", "APD Aging"]:
+        elif fault_class in ["Detector Aging", "Detector APD Degradation", "APD Aging"]:
             candidate_defs = [
                 {
                     "id": "ACTION_DETECTOR_BIAS_AND_COOLING_RETUNE",
@@ -286,7 +286,7 @@ class RemediationOptimizer:
                 },
             ]
             
-        elif fault_class == "Thermal Drift":
+        elif fault_class in ["Temperature Drift", "Thermal Drift"]:
             candidate_defs = [
                 {
                     "id": "ACTION_TEC_PHASE_COMPENSATION",
@@ -317,7 +317,7 @@ class RemediationOptimizer:
                 },
             ]
             
-        elif fault_class == "Timing Jitter":
+        elif fault_class in ["Timing Misalignment", "Timing Jitter"]:
             candidate_defs = [
                 {
                     "id": "ACTION_FPGA_CLOCK_REALIGNMENT",

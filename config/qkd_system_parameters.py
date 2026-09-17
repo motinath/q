@@ -62,36 +62,25 @@ class QKDPhysicsConfig:
 
 
 
-# Layer 0: Standardized 10-Class Fault and Attack Ontology
-ROOT_CAUSE_CLASSES: List[str] = [
-    "Normal",
-    "Optical Misalignment",
-    "Channel Attenuation Event",
-    "Detector APD Degradation",
-    "Thermal Drift",
-    "Timing Jitter",
-    "Intercept-Resend",
-    "Detector Blinding",
-    "Photon Number Splitting",
-    "Time-Shift Attack",
-]
+# Layer 0: Official Standardized Fault Taxonomy (Single Source of Truth)
+from config.dataset_governance import (
+    OFFICIAL_FAULT_CLASSES,
+    FAULT_LABEL_TO_ID,
+    FAULT_ID_TO_LABEL,
+    FAULT_ALARM_SEVERITY,
+    FAULT_PHYSICAL_MECHANISMS,
+    ALL_FEATURE_COLUMNS,
+    OPERATIONAL_FEATURES,
+    ENVIRONMENTAL_FEATURES,
+    MAINTENANCE_FEATURES,
+    DERIVED_MOMENT_FEATURES,
+)
 
-ROOT_CAUSE_LABEL_TO_ID: Dict[str, int] = {name: idx for idx, name in enumerate(ROOT_CAUSE_CLASSES)}
-ROOT_CAUSE_ID_TO_LABEL: Dict[int, str] = {idx: name for idx, name in enumerate(ROOT_CAUSE_CLASSES)}
-
-# Layer 0: Telecom Alarm Severity Mapping
-ALARM_SEVERITY_LEVELS: Dict[str, str] = {
-    "Normal": "NORMAL",                      # Healthy baseline
-    "Optical Misalignment": "MEDIUM",        # Polarization drift / interferometer contrast loss
-    "Channel Attenuation Event": "HIGH",     # Macro-bend / connector loss
-    "Detector APD Degradation": "MAJOR",     # APD trap buildup
-    "Thermal Drift": "MEDIUM",               # Environmental thermal swing
-    "Timing Jitter": "MEDIUM",               # Clock sync phase wander
-    "Intercept-Resend": "CRITICAL",          # Active quantum eavesdropping
-    "Detector Blinding": "CRITICAL",         # Optical saturation physical attack
-    "Photon Number Splitting": "CRITICAL",   # Multi-photon pulse splitting attack
-    "Time-Shift Attack": "CRITICAL",         # Gating window phase attack
-}
+ROOT_CAUSE_CLASSES: List[str] = OFFICIAL_FAULT_CLASSES
+ROOT_CAUSE_LABEL_TO_ID: Dict[str, int] = FAULT_LABEL_TO_ID
+ROOT_CAUSE_ID_TO_LABEL: Dict[int, str] = FAULT_ID_TO_LABEL
+ALARM_SEVERITY_LEVELS: Dict[str, str] = FAULT_ALARM_SEVERITY
 
 # Compatibility alias
 QKDSystemParameters = QKDPhysicsConfig
+

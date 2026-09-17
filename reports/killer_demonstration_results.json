@@ -1,0 +1,190 @@
+{
+  "timestamp_utc": "2026-09-17T08:02:40Z",
+  "fault_scenario": "Temperature Drift (Cryostat TEC Cooling Failure)",
+  "link_distance_km": 25.0,
+  "detection": {
+    "time_to_detect_seconds": 1.0,
+    "detection_latency_ms": 44.6,
+    "anomaly_score": 0.705,
+    "operational_state": "Anomalous"
+  },
+  "attribution": {
+    "predicted_class": "Temperature Drift",
+    "confidence": 1.0,
+    "physics_validation": "ML Prediction Uncertain",
+    "top_shap_features": [
+      "temperature_celsius",
+      "temp_roll_mean_25",
+      "temp_slope_25"
+    ]
+  },
+  "forecasting": {
+    "ptct_remaining_seconds": 129.5,
+    "urgency": "ADVISORY",
+    "qber_at_prediction_pct": 0.95,
+    "abort_threshold_pct": 11.0
+  },
+  "remediation": {
+    "action_id": "ACTION_TEC_PHASE_COMPENSATION",
+    "action_title": "Thermoelectric Cooler (TEC) Thermal Restoral",
+    "pre_action_qber_pct": 1.11,
+    "post_action_qber_pct": 0.81,
+    "delta_qber_pct": -0.3,
+    "pre_action_skr_kbps": 1132.7,
+    "post_action_skr_kbps": 1181.3,
+    "recovery_successful": true,
+    "rolled_back": false
+  },
+  "telemetry_timeline": [
+    {
+      "timestep_s": 1,
+      "phase": "Baseline",
+      "qber_pct": 0.7,
+      "skr_kbps": 1232.7,
+      "temp_c": -39.9,
+      "dark_counts_hz": 510.0,
+      "state": "Warning",
+      "anomaly_score": 0.5
+    },
+    {
+      "timestep_s": 2,
+      "phase": "Baseline",
+      "qber_pct": 0.78,
+      "skr_kbps": 1193.4,
+      "temp_c": -39.9,
+      "dark_counts_hz": 512.0,
+      "state": "Warning",
+      "anomaly_score": 0.5
+    },
+    {
+      "timestep_s": 3,
+      "phase": "Baseline",
+      "qber_pct": 0.79,
+      "skr_kbps": 1171.7,
+      "temp_c": -40.0,
+      "dark_counts_hz": 503.0,
+      "state": "Warning",
+      "anomaly_score": 0.433
+    },
+    {
+      "timestep_s": 4,
+      "phase": "Baseline",
+      "qber_pct": 1.05,
+      "skr_kbps": 1160.4,
+      "temp_c": -40.2,
+      "dark_counts_hz": 493.0,
+      "state": "Warning",
+      "anomaly_score": 0.412
+    },
+    {
+      "timestep_s": 5,
+      "phase": "Baseline",
+      "qber_pct": 0.88,
+      "skr_kbps": 1121.1,
+      "temp_c": -40.2,
+      "dark_counts_hz": 495.0,
+      "state": "Warning",
+      "anomaly_score": 0.411
+    },
+    {
+      "timestep_s": 6,
+      "phase": "Degradation",
+      "qber_pct": 0.95,
+      "skr_kbps": 1165.9,
+      "temp_c": 2.1,
+      "dark_counts_hz": 9254.0,
+      "state": "Anomalous",
+      "anomaly_score": 0.705
+    },
+    {
+      "timestep_s": 7,
+      "phase": "Degradation",
+      "qber_pct": 1.2,
+      "skr_kbps": 1068.8,
+      "temp_c": 2.7,
+      "dark_counts_hz": 9632.0,
+      "state": "Anomalous",
+      "anomaly_score": 0.782
+    },
+    {
+      "timestep_s": 8,
+      "phase": "Degradation",
+      "qber_pct": 1.07,
+      "skr_kbps": 1107.5,
+      "temp_c": 3.0,
+      "dark_counts_hz": 10033.0,
+      "state": "Anomalous",
+      "anomaly_score": 0.782
+    },
+    {
+      "timestep_s": 9,
+      "phase": "Degradation",
+      "qber_pct": 0.84,
+      "skr_kbps": 1170.5,
+      "temp_c": 2.2,
+      "dark_counts_hz": 9321.0,
+      "state": "Anomalous",
+      "anomaly_score": 0.759
+    },
+    {
+      "timestep_s": 10,
+      "phase": "Post-Recovery",
+      "qber_pct": 0.79,
+      "skr_kbps": 1197.7,
+      "temp_c": -39.5,
+      "dark_counts_hz": 517.0,
+      "state": "Anomalous",
+      "anomaly_score": 0.654
+    },
+    {
+      "timestep_s": 11,
+      "phase": "Post-Recovery",
+      "qber_pct": 1.16,
+      "skr_kbps": 1074.4,
+      "temp_c": -40.1,
+      "dark_counts_hz": 498.0,
+      "state": "Anomalous",
+      "anomaly_score": 0.75
+    },
+    {
+      "timestep_s": 12,
+      "phase": "Post-Recovery",
+      "qber_pct": 1.06,
+      "skr_kbps": 1134.5,
+      "temp_c": -40.0,
+      "dark_counts_hz": 499.0,
+      "state": "Anomalous",
+      "anomaly_score": 0.739
+    },
+    {
+      "timestep_s": 13,
+      "phase": "Post-Recovery",
+      "qber_pct": 0.68,
+      "skr_kbps": 1262.6,
+      "temp_c": -40.0,
+      "dark_counts_hz": 507.0,
+      "state": "Anomalous",
+      "anomaly_score": 0.733
+    },
+    {
+      "timestep_s": 14,
+      "phase": "Post-Recovery",
+      "qber_pct": 0.9,
+      "skr_kbps": 1157.9,
+      "temp_c": -39.8,
+      "dark_counts_hz": 518.0,
+      "state": "Anomalous",
+      "anomaly_score": 0.746
+    },
+    {
+      "timestep_s": 15,
+      "phase": "Post-Recovery",
+      "qber_pct": 0.79,
+      "skr_kbps": 1236.2,
+      "temp_c": -39.9,
+      "dark_counts_hz": 502.0,
+      "state": "Anomalous",
+      "anomaly_score": 0.723
+    }
+  ]
+}

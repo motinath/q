@@ -181,6 +181,8 @@ class TelemetryFeatureExtractor:
         temp_arr = np.array([s.temperature_celsius for s in hist_slice])
         jit_arr = np.array([s.timing_jitter_ps for s in hist_slice])
         loss_arr = np.array([s.channel_attenuation_db for s in hist_slice])
+        hum_arr = np.array([getattr(s, "humidity_relative_pct", 45.0) for s in hist_slice])
+        strain_arr = np.array([getattr(s, "fiber_strain_ue", 15.0) for s in hist_slice])
         
         # Statistical moments (IQR, Mean, Std, Var)
         q75, q25 = np.percentile(qber_arr, [75, 25]) if len(qber_arr) >= 4 else (qber_arr[-1], qber_arr[-1])
@@ -196,6 +198,19 @@ class TelemetryFeatureExtractor:
             "temperature_celsius": float(latest.temperature_celsius),
             "timing_jitter_ps": float(latest.timing_jitter_ps),
             "channel_attenuation_db": float(latest.channel_attenuation_db),
+            "channel_loss_db": float(latest.channel_attenuation_db),
+
+            # Environmental Observables
+            "humidity_relative_pct": float(getattr(latest, "humidity_relative_pct", 45.0)),
+            "vibration_g": float(getattr(latest, "vibration_g", 0.02)),
+            "supply_voltage_v": float(getattr(latest, "supply_voltage_v", 3.30)),
+            "fiber_strain_ue": float(getattr(latest, "fiber_strain_ue", 15.0)),
+
+            # Maintenance Features
+            "device_operating_hours": float(getattr(latest, "device_operating_hours", 1200.0)),
+            "hours_since_calibration": float(getattr(latest, "hours_since_calibration", 48.0)),
+            "trap_aging_index": float(getattr(latest, "trap_aging_index", 0.05)),
+            "maintenance_event_count": float(getattr(latest, "maintenance_event_count", 1)),
             
             # 2. Domain Ratios
             "count_to_dark_ratio": float(count_to_dark),
@@ -216,6 +231,7 @@ class TelemetryFeatureExtractor:
             "visibility_roll_mean_25": float(np.mean(vis_arr)),
             "visibility_roll_std_25": float(np.std(vis_arr)) if w > 1 else 0.0,
             "temp_roll_mean_25": float(np.mean(temp_arr)),
+            "humidity_roll_mean_25": float(np.mean(hum_arr)),
             "jitter_roll_mean_25": float(np.mean(jit_arr)),
             
             # 4. Temporal Derivatives
@@ -232,6 +248,8 @@ class TelemetryFeatureExtractor:
             "corr_temp_qber": self._compute_correlation(temp_arr, qber_arr),
             "corr_vis_qber": self._compute_correlation(vis_arr, qber_arr),
             "corr_counts_loss": self._compute_correlation(cnt_arr, loss_arr),
+            "corr_humidity_loss": self._compute_correlation(hum_arr, loss_arr),
+            "corr_strain_vis": self._compute_correlation(strain_arr, vis_arr),
         }
         
         return features

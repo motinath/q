@@ -12,6 +12,7 @@ Author: Senior Quantum Systems & Applied ML Engineering Team
 import time
 import queue
 import threading
+from pathlib import Path
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, asdict
 
@@ -69,7 +70,28 @@ class QKDNetworkOrchestrator:
         self.baseline_engine = AdaptiveBaselineEngine()
         
         self.anomaly_detector = anomaly_detector
+        if self.anomaly_detector is None:
+            m_path = Path(__file__).parent.parent / "models" / "isolation_forest.joblib"
+            s_path = Path(__file__).parent.parent / "models" / "isolation_scaler.joblib"
+            if m_path.exists() and s_path.exists():
+                try:
+                    ad = IsolationForestAnomalyDetector()
+                    ad.load(str(m_path), str(s_path))
+                    self.anomaly_detector = ad
+                except Exception:
+                    pass
+
         self.classifier = classifier
+        if self.classifier is None:
+            c_path = Path(__file__).parent.parent / "models" / "lightgbm_classifier.joblib"
+            if c_path.exists():
+                try:
+                    clf = LightGBMRootCauseClassifier()
+                    clf.load(str(c_path))
+                    self.classifier = clf
+                except Exception:
+                    pass
+
         self.explainer: Optional[SHAPFeatureExplainer] = None
         if self.classifier is not None and self.classifier.is_fitted:
             self.explainer = SHAPFeatureExplainer(self.classifier)
@@ -400,3 +422,89 @@ class QKDNetworkOrchestrator:
             audit_event_id=event_id,
             inference_latency_ms=latency_ms,
         )
+
+    process_single_timestep = process_step
+
+    def execute_closed_loop_actuation(
+        self,
+        remediation: RemediationRecommendation,
+        max_grace_steps: int = 3,
+    ) -> Dict[str, Any]:
+        """
+        Executes physical closed-loop hardware actuation on the live quantum emulator,
+        evaluates post-action recovery metrics, and executes automatic rollback if recovery fails.
+        """
+        pre_sample = self.emulator.step(0.0)
+        pre_qber = pre_sample.qber
+        pre_skr = pre_sample.skr_bps
+        
+        # Save snapshot for rollback
+        snapshot = {
+            "visibility": self.emulator.visibility,
+            "temperature_celsius": self.emulator.temperature_celsius,
+            "fiber_attenuation_db_per_km": self.emulator.fiber_attenuation_db_per_km,
+            "timing_jitter_ps": self.emulator.timing_jitter_ps,
+            "nominal_dcr_hz": self.emulator.nominal_dcr_hz,
+            "trap_aging_index": self.emulator.trap_aging_index,
+            "active_fault": self.emulator.active_fault,
+            "fault_intensity": self.emulator.fault_intensity,
+        }
+        
+        action_id = remediation.action_id.upper()
+        # Physical actuation mapping
+        if "POLARIZATION" in action_id or "WAVEPLATE" in action_id:
+            self.emulator.visibility = 0.985
+            if self.emulator.active_fault in ["Polarization Drift", "Optical Misalignment"]:
+                self.emulator.clear_fault()
+        elif "TEC" in action_id or "THERMAL" in action_id or "COOLING" in action_id:
+            self.emulator.temperature_celsius = -40.0
+            if self.emulator.active_fault in ["Temperature Drift", "Thermal Drift"]:
+                self.emulator.clear_fault()
+        elif "ATTENUATION" in action_id or "FIBER" in action_id or "REROUTE" in action_id:
+            self.emulator.fiber_attenuation_db_per_km = 0.20
+            if self.emulator.active_fault in ["Fiber Bend", "Channel Attenuation Event", "Channel Attenuation"]:
+                self.emulator.clear_fault()
+        elif "TIMING" in action_id or "JITTER" in action_id or "CLOCK" in action_id:
+            self.emulator.timing_jitter_ps = 65.0
+            if self.emulator.active_fault in ["Timing Misalignment", "Timing Jitter", "Time-Shift Attack"]:
+                self.emulator.clear_fault()
+        elif "APD" in action_id or "AGING" in action_id or "BIAS" in action_id:
+            self.emulator.trap_aging_index = 0.05
+            self.emulator.nominal_dcr_hz = 500.0
+            if self.emulator.active_fault in ["Detector Aging", "Detector APD Degradation", "APD Aging"]:
+                self.emulator.clear_fault()
+        elif "QUARANTINE" in action_id or "ABORT" in action_id:
+            self.emulator.eavesdropping_fraction = 0.0
+            self.emulator.clear_fault()
+
+        # Step emulator to observe post-action physical state
+        post_sample = self.emulator.step(dt_seconds=1.0)
+        delta_qber = post_sample.qber - pre_qber
+        delta_skr = post_sample.skr_bps - pre_skr
+        
+        is_successful = (delta_qber < 0.0 or delta_skr > 0.0 or post_sample.qber <= 0.035)
+        rolled_back = False
+
+        if not is_successful:
+            # Rollback to pre-action state
+            self.emulator.visibility = snapshot["visibility"]
+            self.emulator.temperature_celsius = snapshot["temperature_celsius"]
+            self.emulator.fiber_attenuation_db_per_km = snapshot["fiber_attenuation_db_per_km"]
+            self.emulator.timing_jitter_ps = snapshot["timing_jitter_ps"]
+            self.emulator.nominal_dcr_hz = snapshot["nominal_dcr_hz"]
+            self.emulator.trap_aging_index = snapshot["trap_aging_index"]
+            self.emulator.active_fault = snapshot["active_fault"]
+            self.emulator.fault_intensity = snapshot["fault_intensity"]
+            rolled_back = True
+
+        return {
+            "action_id": remediation.action_id,
+            "pre_action_qber": round(pre_qber, 4),
+            "post_action_qber": round(post_sample.qber, 4),
+            "delta_qber": round(delta_qber, 4),
+            "pre_action_skr": round(pre_skr, 1),
+            "post_action_skr": round(post_sample.skr_bps, 1),
+            "delta_skr": round(delta_skr, 1),
+            "recovery_successful": is_successful,
+            "rolled_back": rolled_back,
+        }

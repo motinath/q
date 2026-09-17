@@ -1,0 +1,92 @@
+{
+  "timestamp": "2026-09-17T14:00:05.305128",
+  "baseline_evaluation": {
+    "total_samples": 400,
+    "correct_normal": 40,
+    "misclassified_normal": 360,
+    "breakdown": {
+      "Normal": 40,
+      "Fiber Bend": 201,
+      "Power Instability": 114,
+      "Humidity Impact": 45
+    }
+  },
+  "root_cause_factors": {
+    "factor_1_fiber_length_multi_modality": {
+      "25.0km": {
+        "Normal": 128,
+        "Power Instability": 372
+      },
+      "35.0km": {
+        "Normal": 34,
+        "Timing Misalignment": 1,
+        "Power Instability": 231,
+        "Humidity Impact": 234
+      },
+      "50.0km": {
+        "Fiber Bend": 499,
+        "Humidity Impact": 1
+      },
+      "60.0km": {
+        "Fiber Bend": 500
+      }
+    },
+    "factor_2_power_instability_emulator_bug": "mean_mu local variable disconnected from compute_signal_yield (fixed in quantum_telemetry_emulator.py)",
+    "factor_3_training_class_imbalance": "full_train previously used 500 samples of df_norm vs 1736 samples of faults (fixed by full multi-length concatenation)"
+  },
+  "threshold_experiments": [
+    {
+      "confidence_threshold": 0.5,
+      "false_positives": 312,
+      "normal_accuracy": 0.22
+    },
+    {
+      "confidence_threshold": 0.65,
+      "false_positives": 294,
+      "normal_accuracy": 0.265
+    },
+    {
+      "confidence_threshold": 0.75,
+      "false_positives": 281,
+      "normal_accuracy": 0.2975
+    },
+    {
+      "confidence_threshold": 0.85,
+      "false_positives": 277,
+      "normal_accuracy": 0.3075
+    },
+    {
+      "confidence_threshold": 0.9,
+      "false_positives": 275,
+      "normal_accuracy": 0.3125
+    },
+    {
+      "confidence_threshold": 0.95,
+      "false_positives": 275,
+      "normal_accuracy": 0.3125
+    }
+  ],
+  "hierarchical_gate_performance": {
+    "normal_correct": 374,
+    "false_positives": 26,
+    "fp_reduction_pct": 92.78
+  },
+  "post_calibration_performance": {
+    "normal_correct": 400,
+    "false_positives": 0,
+    "normal_accuracy": 1.0,
+    "ood_rejection_rate": 1.0
+  },
+  "shap_top_features": {
+    "dark_counts_roll_std_25": 0.24174791923066935,
+    "temperature_celsius": 0.2763694192394503,
+    "dark_counts_hz": 0.2896741297845627,
+    "channel_attenuation_db": 0.3443933888432466,
+    "raw_counts_roll_mean_25": 0.38295112911033946,
+    "visibility": 0.42644709974381706,
+    "count_to_dark_ratio": 0.47308471940601854,
+    "raw_counts_hz": 0.7186150884542212
+  },
+  "brier_score": 0.4499,
+  "expected_calibration_error": 0.3835
+}

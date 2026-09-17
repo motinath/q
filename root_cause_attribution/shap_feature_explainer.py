@@ -91,9 +91,11 @@ class SHAPFeatureExplainer:
         
         # Handle SHAP multi-class format
         if isinstance(shap_values, list):
-            class_shap = shap_values[class_idx][0]
+            c_idx = min(class_idx, len(shap_values) - 1)
+            class_shap = shap_values[c_idx][0]
         elif isinstance(shap_values, np.ndarray) and shap_values.ndim == 3:
-            class_shap = shap_values[0, :, class_idx]
+            c_idx = min(class_idx, shap_values.shape[2] - 1)
+            class_shap = shap_values[0, :, c_idx]
         elif isinstance(shap_values, np.ndarray) and shap_values.ndim == 2:
             class_shap = shap_values[0]
         else:

@@ -7,98 +7,98 @@
       {
         "run_id": "RUN_001",
         "seed": 10001,
-        "fault_type": "Optical Misalignment",
+        "fault_type": "Temperature Drift",
         "intensity": 0.525,
         "samples": 40
       },
       {
         "run_id": "RUN_002",
         "seed": 10002,
-        "fault_type": "Channel Attenuation Event",
+        "fault_type": "Fiber Bend",
         "intensity": 0.87,
         "samples": 40
       },
       {
         "run_id": "RUN_003",
         "seed": 10003,
-        "fault_type": "Detector APD Degradation",
+        "fault_type": "Polarization Drift",
         "intensity": 0.739,
         "samples": 40
       },
       {
         "run_id": "RUN_004",
         "seed": 10004,
-        "fault_type": "Thermal Drift",
+        "fault_type": "Detector Aging",
         "intensity": 0.659,
         "samples": 40
       },
       {
         "run_id": "RUN_005",
         "seed": 10005,
-        "fault_type": "Timing Jitter",
+        "fault_type": "Timing Misalignment",
         "intensity": 0.394,
         "samples": 40
       },
       {
         "run_id": "RUN_006",
         "seed": 10006,
-        "fault_type": "Intercept-Resend",
+        "fault_type": "Power Instability",
         "intensity": 0.394,
         "samples": 40
       },
       {
         "run_id": "RUN_007",
         "seed": 10007,
-        "fault_type": "Detector Blinding",
+        "fault_type": "Humidity Impact",
         "intensity": 0.335,
         "samples": 40
       },
       {
         "run_id": "RUN_008",
         "seed": 10008,
-        "fault_type": "Photon Number Splitting",
+        "fault_type": "Unknown Fault",
         "intensity": 0.82,
         "samples": 40
       },
       {
         "run_id": "RUN_009",
         "seed": 10009,
-        "fault_type": "Time-Shift Attack",
-        "intensity": 0.661,
-        "samples": 40
-      },
-      {
-        "run_id": "RUN_010",
-        "seed": 10010,
         "fault_type": "Normal",
         "intensity": 0.0,
         "samples": 40
       },
       {
+        "run_id": "RUN_010",
+        "seed": 10010,
+        "fault_type": "Temperature Drift",
+        "intensity": 0.661,
+        "samples": 40
+      },
+      {
         "run_id": "RUN_011",
         "seed": 10011,
-        "fault_type": "Optical Misalignment",
+        "fault_type": "Fiber Bend",
         "intensity": 0.725,
         "samples": 40
       },
       {
         "run_id": "RUN_012",
         "seed": 10012,
-        "fault_type": "Channel Attenuation Event",
+        "fault_type": "Polarization Drift",
         "intensity": 0.312,
         "samples": 40
       },
       {
         "run_id": "RUN_013",
         "seed": 10013,
-        "fault_type": "Detector APD Degradation",
+        "fault_type": "Detector Aging",
         "intensity": 0.882,
         "samples": 40
       },
       {
         "run_id": "RUN_014",
         "seed": 10014,
-        "fault_type": "Thermal Drift",
+        "fault_type": "Timing Misalignment",
         "intensity": 0.799,
         "samples": 40
       }
@@ -107,21 +107,21 @@
       {
         "run_id": "RUN_015",
         "seed": 10015,
-        "fault_type": "Timing Jitter",
+        "fault_type": "Power Instability",
         "intensity": 0.427,
         "samples": 40
       },
       {
         "run_id": "RUN_016",
         "seed": 10016,
-        "fault_type": "Intercept-Resend",
+        "fault_type": "Humidity Impact",
         "intensity": 0.409,
         "samples": 40
       },
       {
         "run_id": "RUN_017",
         "seed": 10017,
-        "fault_type": "Detector Blinding",
+        "fault_type": "Unknown Fault",
         "intensity": 0.41,
         "samples": 40
       }
@@ -130,22 +130,22 @@
       {
         "run_id": "RUN_018",
         "seed": 10018,
-        "fault_type": "Photon Number Splitting",
-        "intensity": 0.483,
+        "fault_type": "Normal",
+        "intensity": 0.0,
         "samples": 40
       },
       {
         "run_id": "RUN_019",
         "seed": 10019,
-        "fault_type": "Time-Shift Attack",
-        "intensity": 0.615,
+        "fault_type": "Temperature Drift",
+        "intensity": 0.483,
         "samples": 40
       },
       {
         "run_id": "RUN_020",
         "seed": 10020,
-        "fault_type": "Normal",
-        "intensity": 0.0,
+        "fault_type": "Fiber Bend",
+        "intensity": 0.615,
         "samples": 40
       }
     ],
@@ -153,7 +153,7 @@
       {
         "run_id": "PARAM_SHIFT_01",
         "seed": 20001,
-        "fault_type": "Optical Misalignment",
+        "fault_type": "Temperature Drift",
         "intensity": 0.566,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
@@ -161,7 +161,7 @@
       {
         "run_id": "PARAM_SHIFT_02",
         "seed": 20002,
-        "fault_type": "Channel Attenuation Event",
+        "fault_type": "Fiber Bend",
         "intensity": 0.496,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
@@ -169,7 +169,7 @@
       {
         "run_id": "PARAM_SHIFT_03",
         "seed": 20003,
-        "fault_type": "Detector APD Degradation",
+        "fault_type": "Polarization Drift",
         "intensity": 0.656,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
@@ -177,7 +177,7 @@
       {
         "run_id": "PARAM_SHIFT_04",
         "seed": 20004,
-        "fault_type": "Thermal Drift",
+        "fault_type": "Detector Aging",
         "intensity": 0.42,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
@@ -185,7 +185,7 @@
       {
         "run_id": "PARAM_SHIFT_05",
         "seed": 20005,
-        "fault_type": "Timing Jitter",
+        "fault_type": "Timing Misalignment",
         "intensity": 0.496,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
@@ -193,7 +193,7 @@
       {
         "run_id": "PARAM_SHIFT_06",
         "seed": 20006,
-        "fault_type": "Intercept-Resend",
+        "fault_type": "Power Instability",
         "intensity": 0.533,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
@@ -201,7 +201,7 @@
       {
         "run_id": "PARAM_SHIFT_07",
         "seed": 20007,
-        "fault_type": "Detector Blinding",
+        "fault_type": "Humidity Impact",
         "intensity": 0.578,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
@@ -209,7 +209,7 @@
       {
         "run_id": "PARAM_SHIFT_08",
         "seed": 20008,
-        "fault_type": "Photon Number Splitting",
+        "fault_type": "Unknown Fault",
         "intensity": 0.743,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
@@ -217,23 +217,23 @@
       {
         "run_id": "PARAM_SHIFT_09",
         "seed": 20009,
-        "fault_type": "Time-Shift Attack",
-        "intensity": 0.45,
-        "fiber_length_km": 35.0,
-        "baseline_dcr_hz": 250.0
-      },
-      {
-        "run_id": "PARAM_SHIFT_10",
-        "seed": 20010,
         "fault_type": "Normal",
         "intensity": 0.0,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
       },
       {
+        "run_id": "PARAM_SHIFT_10",
+        "seed": 20010,
+        "fault_type": "Temperature Drift",
+        "intensity": 0.45,
+        "fiber_length_km": 35.0,
+        "baseline_dcr_hz": 250.0
+      },
+      {
         "run_id": "PARAM_SHIFT_11",
         "seed": 20011,
-        "fault_type": "Optical Misalignment",
+        "fault_type": "Fiber Bend",
         "intensity": 0.607,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
@@ -241,7 +241,7 @@
       {
         "run_id": "PARAM_SHIFT_12",
         "seed": 20012,
-        "fault_type": "Channel Attenuation Event",
+        "fault_type": "Polarization Drift",
         "intensity": 0.646,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
@@ -249,7 +249,7 @@
       {
         "run_id": "PARAM_SHIFT_13",
         "seed": 20013,
-        "fault_type": "Detector APD Degradation",
+        "fault_type": "Detector Aging",
         "intensity": 0.373,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0
@@ -257,7 +257,7 @@
       {
         "run_id": "PARAM_SHIFT_14",
         "seed": 20014,
-        "fault_type": "Thermal Drift",
+        "fault_type": "Timing Misalignment",
         "intensity": 0.654,
         "fiber_length_km": 35.0,
         "baseline_dcr_hz": 250.0

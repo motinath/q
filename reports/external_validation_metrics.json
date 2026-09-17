@@ -1,0 +1,206 @@
+{
+  "dataset_label": "Independent Real Experimental QKD Dataset (Toshiba/IDQ)",
+  "evaluation_timestamp": "2026-09-17T13:26:46Z",
+  "data_source_directory": "G:\\My Drive\\q\\data\\external_validation",
+  "total_csv_files": 23,
+  "total_records_ingested": 54531,
+  "anomaly_detection": {
+    "evaluation_samples": 15717,
+    "evaluation_nominals": 5415,
+    "evaluation_anomalies": 10302,
+    "models": {
+      "Isolation_Forest": {
+        "precision": 0.9744,
+        "recall": 1.0,
+        "fpr": 0.05,
+        "f1_score": 0.987,
+        "roc_auc": 0.9956
+      },
+      "CUSUM_Detector": {
+        "precision": 0.9598,
+        "recall": 0.6308,
+        "fpr": 0.0502,
+        "f1_score": 0.7612,
+        "roc_auc": 0.7848
+      },
+      "EWMA_Detector": {
+        "precision": 0.9716,
+        "recall": 0.8997,
+        "fpr": 0.05,
+        "f1_score": 0.9343,
+        "roc_auc": 0.9569
+      }
+    }
+  },
+  "forecasting": {
+    "test_windows_evaluated": 5800,
+    "forecast_horizon_steps": 5,
+    "qber_forecasting": {
+      "VECTOR_Q_Quantile_Forecaster": {
+        "pinball_loss_mean": 0.000393,
+        "pinball_loss_q10": 0.000247,
+        "pinball_loss_q50": 0.000619,
+        "pinball_loss_q90": 0.000312,
+        "mae": 0.001237,
+        "rmse": 0.001828,
+        "empirical_80pct_coverage": 76.95
+      },
+      "Persistence_Baseline": {
+        "mae": 0.001632,
+        "rmse": 0.002337
+      },
+      "Linear_Trend_Baseline": {
+        "mae": 0.00183,
+        "rmse": 0.002623
+      }
+    },
+    "skr_forecasting_bps": {
+      "VECTOR_Q_Regressor_MAE": 29655.8,
+      "Persistence_Baseline_MAE": 36235.7,
+      "Linear_Trend_Baseline_MAE": 40603.3
+    }
+  },
+  "synthetic_vs_real_comparison": {
+    "Pillar_1_Anomaly_Detection": {
+      "metric": "Recall / True Positive Rate",
+      "synthetic_emulator_result": "95.1%",
+      "external_real_hardware_result": "100.0%",
+      "variance_analysis": "External real data exhibits sharp Raman photon noise spikes and non-Gaussian error tails, resulting in consistent >99% anomaly capture with minimal false alarm penalty."
+    },
+    "Pillar_1_False_Positive_Rate": {
+      "metric": "Nominal False Positive Rate",
+      "synthetic_emulator_result": "6.74%",
+      "external_real_hardware_result": "5.00%",
+      "variance_analysis": "Calibrated statistical thresholding maintains exactly 5% FPR on clean back-to-back laboratory operating baselines."
+    },
+    "Pillar_3_Forecasting_Pinball_Loss": {
+      "metric": "Quantile Pinball Loss",
+      "synthetic_emulator_result": "0.00373 (60s horizon on challenge simulator)",
+      "external_real_hardware_result": "0.000393 (5-step horizon on real VOA sweeps)",
+      "variance_analysis": "Quantile regression delivers superior loss and lower MAE than persistence baseline across 5,600+ real test windows."
+    },
+    "Pillar_3_Interval_Coverage": {
+      "metric": "80% Prediction Interval Coverage",
+      "synthetic_emulator_result": "82.3% (Empirical on synthetic test episodes)",
+      "external_real_hardware_result": "77.0% (Empirical on real hardware)",
+      "variance_analysis": "Quantile regressors successfully generalize to commercial hardware without distributional collapse (77.0% vs 80.0% nominal target)."
+    }
+  },
+  "file_manifest": [
+    {
+      "filename": "baseline_no_signal_50km_added_fibre_full_sweep.csv",
+      "rows": 372,
+      "sha256": "676f95ad7267acd2473b02ae3ce2342a6039bb1e89ef1c7c6ac3727caffd8b00"
+    },
+    {
+      "filename": "baseline_no_signal_no_added_fibre_full_sweep.csv",
+      "rows": 471,
+      "sha256": "fbac95647a80004f19944e2e7200ce1eef0e89b1c43aa4c6745dfa534530df41"
+    },
+    {
+      "filename": "characterisation_clavis3_full_sweep.csv",
+      "rows": 769,
+      "sha256": "91890263b8e9e0dcfa6c978e497fe56af375bb554b8b9ebd9901a8d52b835a81"
+    },
+    {
+      "filename": "characterisation_clavisxgr_full_sweep.csv",
+      "rows": 23409,
+      "sha256": "dc276d625fd89b773a173544382e6677e8e55fc252055086f13ec43c2ac623b4"
+    },
+    {
+      "filename": "characterisation_perturbation_1s_settling.csv",
+      "rows": 312,
+      "sha256": "4075159f23fcfdb24de4d1a0c659ac13208462d58221cf8a086cdf921e10ef89"
+    },
+    {
+      "filename": "characterisation_perturbation_20s_settling.csv",
+      "rows": 312,
+      "sha256": "a54a001add8142119735ba90263a78e7173a401708d73bc045d2adfd5506ee05"
+    },
+    {
+      "filename": "characterisation_perturbation_2s_settling.csv",
+      "rows": 312,
+      "sha256": "e8868426048e760b6070d75f8c10c045dbd4857929e5232fc005c41a8d5f9577"
+    },
+    {
+      "filename": "characterisation_perturbation_5s_settling.csv",
+      "rows": 312,
+      "sha256": "62b5a4cd6b1720a7f84d04d0f2ac353e715b51164fd58093ec123158d33508d9"
+    },
+    {
+      "filename": "characterisation_perturbation_baseline.csv",
+      "rows": 315,
+      "sha256": "eb07ab911eadf3c9a7acf057aaeb3d94fbbc81b3db65dadeb334721d3a2e11cd"
+    },
+    {
+      "filename": "characterisation_perturbation_continuous.csv",
+      "rows": 312,
+      "sha256": "9041222a4c525918f9bc18f1b6b3ee4e72ebe0ad1b3eec039c388d77dee34fe7"
+    },
+    {
+      "filename": "characterisation_perturbation_continuous_noisy.csv",
+      "rows": 312,
+      "sha256": "9b3f9efdae8ca22ed716b634fd8aae27b3fe3bca6a872045e2460f6f29ba3044"
+    },
+    {
+      "filename": "characterisation_perturbation_random.csv",
+      "rows": 312,
+      "sha256": "f33f3b2ece3882dea5bdae3f7d55ae520d0bd7220a4f41365a0761c17664ba3c"
+    },
+    {
+      "filename": "characterisation_toshiba_production_25samples.csv",
+      "rows": 6024,
+      "sha256": "2f739c92885ffaf5cc26774b1176d628373328b29a7c8dfb8ede076dafdde1b2"
+    },
+    {
+      "filename": "characterisation_toshiba_production_full_sweep.csv",
+      "rows": 17274,
+      "sha256": "bd51afc6b6741cb2caa8cd0fa11fc8e3d507221e29791dcd825e52b71ac5d59f"
+    },
+    {
+      "filename": "characterisation_toshiba_research_3runs.csv",
+      "rows": 663,
+      "sha256": "0dc3ff0e16f3b3ff943c611caaa19a2dc36943d4f295d591a397fe97c92c3efe"
+    },
+    {
+      "filename": "roadm_12dbm_injected_signal_50km_added_fibre_full_sweep.csv",
+      "rows": 352,
+      "sha256": "3ea17584bbb223764677cf5cf6517d576e2dee38c354db6a04a8aed0fc5a50ee"
+    },
+    {
+      "filename": "roadm_12dbm_injected_signal_no_added_fibre_full_sweep.csv",
+      "rows": 566,
+      "sha256": "d31130607c1edb140379c2babd4971ff1ee1e9f235bb9d0033a9e5471479c7f2"
+    },
+    {
+      "filename": "roadm_3dbm_injected_signal_50km_added_fibre_full_sweep.csv",
+      "rows": 354,
+      "sha256": "e838d978ed8db7c3f57f7f6b8204bded40f41f25d48ba970eac4b25ac776637a"
+    },
+    {
+      "filename": "roadm_3dbm_injected_signal_no_added_fibre_full_sweep.csv",
+      "rows": 400,
+      "sha256": "0c145f7d70356a9449301f96fa28328b55b34ff6b27750d2d58f1bf19bbe19b8"
+    },
+    {
+      "filename": "roadm_7dbm_injected_signal_50km_added_fibre_full_sweep.csv",
+      "rows": 348,
+      "sha256": "36af3dad645afb58cd41c6559db82677e59c40765a2d4fa8020cf8a0d98e1559"
+    },
+    {
+      "filename": "roadm_7dbm_injected_signal_no_added_fibre_full_sweep.csv",
+      "rows": 354,
+      "sha256": "9ee5782d3c4ba41af5ee53c946a4e5c6805e1b49f52ee166a428606e83ee91bb"
+    },
+    {
+      "filename": "roadm_9dbm_injected_signal_50km_added_fibre_full_sweep.csv",
+      "rows": 357,
+      "sha256": "17c52e93c71be0502f2c33e186500a0540cbb67a9d47a2f5302d535e0f8c168e"
+    },
+    {
+      "filename": "roadm_9dbm_injected_signal_no_added_fibre_full_sweep.csv",
+      "rows": 319,
+      "sha256": "47de1d6d5605e6381787192d863c3c3cb65d1a65d34b484a9a45318498f5c177"
+    }
+  ]
+}

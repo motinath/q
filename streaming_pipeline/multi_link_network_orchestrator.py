@@ -17,6 +17,7 @@ from collections import defaultdict, deque
 import time
 
 from config.network_topology import NetworkTopology, QKDLink, QKDNode
+from config.qkd_system_parameters import QKDPhysicsConfig
 from streaming_pipeline.qkd_network_orchestrator import QKDNetworkOrchestrator
 from physics_engine.quantum_telemetry_emulator import QuantumTelemetryEmulator
 
@@ -96,11 +97,12 @@ class MultiLinkNetworkOrchestrator:
         # Initialize orchestrators for each link
         for link_id, link in topology.links.items():
             if link.is_active:
-                emulator = QuantumTelemetryEmulator(
-                    fiber_distance_km=link.fiber_distance_km,
-                    nominal_alpha=link.nominal_alpha_db_per_km
+                cfg = QKDPhysicsConfig(
+                    default_fiber_length_km=link.fiber_distance_km,
+                    nominal_fiber_attenuation_db_per_km=link.nominal_alpha_db_per_km,
                 )
-                orchestrator = QKDNetworkOrchestrator(telemetry_source=emulator)
+                emulator = QuantumTelemetryEmulator(config=cfg)
+                orchestrator = QKDNetworkOrchestrator(config=cfg, emulator=emulator)
                 
                 self.link_emulators[link_id] = emulator
                 self.link_orchestrators[link_id] = orchestrator
@@ -128,25 +130,22 @@ class MultiLinkNetworkOrchestrator:
         # Step 1: Process each link independently
         for link_id, orchestrator in self.link_orchestrators.items():
             try:
-                result = orchestrator.process_single_timestep()
+                result = orchestrator.process_step()
                 
                 state = LinkDiagnosticState(
                     link_id=link_id,
                     timestamp=timestamp,
-                    is_anomaly=result.anomaly_result.is_anomaly,
-                    anomaly_score=result.anomaly_result.anomaly_score,
-                    predicted_class=result.attribution_result.predicted_class,
-                    ml_confidence=result.attribution_result.ml_confidence,
-                    physics_confidence=result.physics_result.physics_confidence,
-                    unified_trust_score=result.physics_result.unified_trust_score,
-                    qber=result.features.qber,
-                    skr_bps=result.features.skr_bps,
-                    ptct_seconds=result.ptct_result.time_to_crossing_seconds 
-                                 if result.ptct_result else None,
-                    urgency_level=result.ptct_result.urgency_level 
-                                 if result.ptct_result else "STABLE",
-                    recommended_action=result.remediation_result.selected_action.action_name
-                                      if result.remediation_result else "Monitor"
+                    is_anomaly=result.anomaly.is_anomaly,
+                    anomaly_score=result.anomaly.anomaly_score,
+                    predicted_class=result.attribution.predicted_class,
+                    ml_confidence=result.attribution.confidence,
+                    physics_confidence=result.physics_validation.physics_consistency_score,
+                    unified_trust_score=result.physics_validation.fused_trust_score,
+                    qber=result.sample.qber,
+                    skr_bps=result.sample.skr_bps,
+                    ptct_seconds=result.ptct_forecast.t_cross_seconds if result.ptct_forecast else None,
+                    urgency_level=result.ptct_forecast.urgency_level if result.ptct_forecast else "STABLE",
+                    recommended_action=result.remediation.action_title if result.remediation else "Monitor"
                 )
                 
                 link_states[link_id] = state

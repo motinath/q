@@ -1,0 +1,211 @@
+{
+  "file_name": "roadm_12dbm_injected_signal_no_added_fibre_full_sweep.csv",
+  "row_count": 566,
+  "voa_blocks": {
+    "10": {
+      "row_count": 65,
+      "qber_stats": {
+        "count": 65,
+        "mean": 0.031812,
+        "min": 0.0262,
+        "max": 0.0366,
+        "median": 0.0317,
+        "std_dev": 0.002223
+      },
+      "skr_stats": {
+        "count": 65,
+        "mean": 275733.215385,
+        "min": 213775.0,
+        "max": 314106.0,
+        "median": 278691.0,
+        "std_dev": 21669.638115
+      },
+      "zero_skr_count": 0,
+      "zero_skr_fraction": 0.0,
+      "fully_collapsed": false
+    },
+    "15": {
+      "row_count": 238,
+      "qber_stats": {
+        "count": 238,
+        "mean": 0.033287,
+        "min": 0.0291,
+        "max": 0.0382,
+        "median": 0.0333,
+        "std_dev": 0.001282
+      },
+      "skr_stats": {
+        "count": 238,
+        "mean": 98072.117647,
+        "min": 80816.0,
+        "max": 111214.0,
+        "median": 97949.5,
+        "std_dev": 4928.572082
+      },
+      "zero_skr_count": 0,
+      "zero_skr_fraction": 0.0,
+      "fully_collapsed": false
+    },
+    "20": {
+      "row_count": 55,
+      "qber_stats": {
+        "count": 55,
+        "mean": 0.036035,
+        "min": 0.0315,
+        "max": 0.0401,
+        "median": 0.0361,
+        "std_dev": 0.002022
+      },
+      "skr_stats": {
+        "count": 55,
+        "mean": 33688.018182,
+        "min": 28479.0,
+        "max": 37999.0,
+        "median": 33381.0,
+        "std_dev": 2550.86204
+      },
+      "zero_skr_count": 0,
+      "zero_skr_fraction": 0.0,
+      "fully_collapsed": false
+    },
+    "25": {
+      "row_count": 46,
+      "qber_stats": {
+        "count": 46,
+        "mean": 0.045674,
+        "min": 0.0407,
+        "max": 0.0521,
+        "median": 0.04565,
+        "std_dev": 0.002392
+      },
+      "skr_stats": {
+        "count": 46,
+        "mean": 7306.152174,
+        "min": 3289.0,
+        "max": 11684.0,
+        "median": 7055.0,
+        "std_dev": 1756.433082
+      },
+      "zero_skr_count": 0,
+      "zero_skr_fraction": 0.0,
+      "fully_collapsed": false
+    },
+    "27": {
+      "row_count": 37,
+      "qber_stats": {
+        "count": 37,
+        "mean": 0.062849,
+        "min": 0.0624,
+        "max": 0.0633,
+        "median": 0.0628,
+        "std_dev": 0.00025
+      },
+      "skr_stats": {
+        "count": 37,
+        "mean": 71.513514,
+        "min": 12.0,
+        "max": 136.0,
+        "median": 71.0,
+        "std_dev": 36.350116
+      },
+      "zero_skr_count": 0,
+      "zero_skr_fraction": 0.0,
+      "fully_collapsed": false
+    },
+    "28": {
+      "row_count": 36,
+      "qber_stats": {
+        "count": 36,
+        "mean": 0.068539,
+        "min": 0.0656,
+        "max": 0.072,
+        "median": 0.06885,
+        "std_dev": 0.001657
+      },
+      "skr_stats": {
+        "count": 36,
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "median": 0.0,
+        "std_dev": 0.0
+      },
+      "zero_skr_count": 36,
+      "zero_skr_fraction": 1.0,
+      "fully_collapsed": true
+    },
+    "29": {
+      "row_count": 48,
+      "qber_stats": {
+        "count": 48,
+        "mean": 0.075685,
+        "min": 0.072,
+        "max": 0.0804,
+        "median": 0.0755,
+        "std_dev": 0.002016
+      },
+      "skr_stats": {
+        "count": 48,
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "median": 0.0,
+        "std_dev": 0.0
+      },
+      "zero_skr_count": 48,
+      "zero_skr_fraction": 1.0,
+      "fully_collapsed": true
+    },
+    "30": {
+      "row_count": 41,
+      "qber_stats": {
+        "count": 41,
+        "mean": 0.082732,
+        "min": 0.0796,
+        "max": 0.0865,
+        "median": 0.0826,
+        "std_dev": 0.001616
+      },
+      "skr_stats": {
+        "count": 41,
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "median": 0.0,
+        "std_dev": 0.0
+      },
+      "zero_skr_count": 41,
+      "zero_skr_fraction": 1.0,
+      "fully_collapsed": true
+    }
+  },
+  "overall": {
+    "qber_stats": {
+      "count": 566,
+      "mean": 0.045743,
+      "min": 0.0262,
+      "max": 0.0865,
+      "median": 0.03475,
+      "std_dev": 0.018079
+    },
+    "skr_stats": {
+      "count": 566,
+      "mean": 76776.312721,
+      "min": 0.0,
+      "max": 314106.0,
+      "median": 91610.5,
+      "std_dev": 84027.616754
+    },
+    "unique_voa_values": [
+      "10",
+      "15",
+      "20",
+      "25",
+      "27",
+      "28",
+      "29",
+      "30"
+    ],
+    "num_voa_blocks": 8
+  }
+}

@@ -31,12 +31,14 @@ def test_basic_diagnostics():
         
         # Validate result
         assert result.sample.qber >= 0.0, "QBER must be non-negative"
-        assert result.attribution.predicted_class in [
+        from config.qkd_system_parameters import ROOT_CAUSE_CLASSES
+        valid_classes = set(ROOT_CAUSE_CLASSES) | {
             "Normal", "Optical Misalignment", "Detector APD Degradation",
             "Timing Jitter", "Channel Attenuation Event", "Thermal Drift",
             "Intercept-Resend", "Detector Blinding", "Photon Number Splitting",
             "Time-Shift Attack"
-        ], f"Invalid predicted class: {result.attribution.predicted_class}"
+        }
+        assert result.attribution.predicted_class in valid_classes, f"Invalid predicted class: {result.attribution.predicted_class}"
         assert 0.0 <= result.attribution.confidence <= 1.0, "Confidence must be in [0,1]"
         
         print(f"Cycle {i+1}:")

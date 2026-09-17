@@ -15,8 +15,11 @@ P3.1: Added quadratic PTCT mode.  When |qber_acceleration| > threshold, solves
 Author: Senior Quantum Systems & Applied ML Engineering Team
 """
 
+import os
 import math
+import joblib
 import numpy as np
+import lightgbm as lgb
 from typing import Dict, Any, List, Optional, Tuple
 from dataclasses import dataclass
 from config.qkd_system_parameters import QKDPhysicsConfig
@@ -269,3 +272,254 @@ class ThresholdCrossingForecaster:
             urgency_level=urgency,
             recommendation_message=msg,
         )
+
+
+# ==============================================================================
+# CHALLENGE EXTENSION: Dual-Horizon Fixed-Window Quantile Forecaster
+# ==============================================================================
+
+@dataclass
+class QuantileForecastResult:
+    """Represents the output of Layer 6 Dual-Horizon Quantile Forecaster."""
+    current_qber: float
+    # 60-second horizon quantiles
+    qber_60s_p10: float
+    qber_60s_p50: float
+    qber_60s_p90: float
+    # 300-second (5-min) horizon quantiles
+    qber_300s_p10: float
+    qber_300s_p50: float
+    qber_300s_p90: float
+    urgency_level: str                    # "CRITICAL", "WARNING", "STABLE"
+    recommendation_message: str
+    is_crossing_predicted: bool
+    predicted_crossing_horizon_s: Optional[int]
+
+
+class DualHorizonQuantileForecaster:
+    """
+    Fixed-horizon Quantile Regression Forecaster for QBER predictive maintenance.
+    Predicts calibrated distribution quantiles (alpha in {0.10, 0.50, 0.90}) for:
+      - Horizon 1: t + 60 seconds (1 minute lookahead)
+      - Horizon 2: t + 300 seconds (5 minute lookahead)
+
+    Features:
+      - Strictly monotonic quantiles: enforces q_0.10 <= q_0.50 <= q_0.90.
+      - Fixed-window lookahead avoiding horizon truncation artifacts.
+      - Evaluated against Persistence and Linear Trend baselines using Pinball loss.
+    """
+    def __init__(
+        self,
+        quantiles: Tuple[float, ...] = (0.10, 0.50, 0.90),
+        horizons_s: Tuple[int, ...] = (60, 300),
+        warning_threshold: float = 0.08,
+        abort_threshold: float = 0.11,
+        random_state: int = 42,
+    ):
+        self.quantiles = quantiles
+        self.horizons_s = horizons_s
+        self.warning_threshold = warning_threshold
+        self.abort_threshold = abort_threshold
+        self.random_state = random_state
+
+        self.models: Dict[str, lgb.LGBMRegressor] = {}
+        self.is_fitted: bool = False
+
+    def fit(self, X_train: np.ndarray, y_targets: Dict[str, np.ndarray]) -> None:
+        """
+        Fits LightGBM quantile regressors for each (horizon, quantile) pair.
+        y_targets keys must include "target_qber_60s" and "target_qber_300s".
+        """
+        for h in self.horizons_s:
+            col = f"target_qber_{h}s"
+            if col not in y_targets:
+                continue
+            y = y_targets[col]
+            valid_mask = ~np.isnan(y)
+            X_valid = X_train[valid_mask]
+            y_valid = y[valid_mask]
+
+            if len(X_valid) < 100:
+                continue
+
+            for q in self.quantiles:
+                key = f"{h}s_q{int(q*100)}"
+                model = lgb.LGBMRegressor(
+                    objective="quantile",
+                    alpha=q,
+                    n_estimators=120,
+                    learning_rate=0.05,
+                    max_depth=5,
+                    num_leaves=31,
+                    subsample=0.85,
+                    colsample_bytree=0.85,
+                    random_state=self.random_state,
+                    verbosity=-1,
+                    n_jobs=1,
+                )
+                model.fit(X_valid, y_valid)
+                self.models[key] = model
+
+        self.is_fitted = True
+
+    def predict_sample(self, x: np.ndarray, current_qber: float) -> QuantileForecastResult:
+        """
+        Infers monotonic quantile forecasts for 60s and 300s horizons from feature vector x.
+        """
+        x_2d = x.reshape(1, -1)
+
+        def _predict_horizon(h: int) -> Tuple[float, float, float]:
+            vals = []
+            for q in self.quantiles:
+                key = f"{h}s_q{int(q*100)}"
+                if key in self.models:
+                    val = float(self.models[key].predict(x_2d)[0])
+                else:
+                    # Fallback to current QBER if model not available
+                    val = current_qber
+                vals.append(val)
+            # Enforce strict quantile monotonicity: q10 <= q50 <= q90
+            vals.sort()
+            return float(np.clip(vals[0], 0.0, 0.50)), float(np.clip(vals[1], 0.0, 0.50)), float(np.clip(vals[2], 0.0, 0.50))
+
+        q10_60, q50_60, q90_60 = _predict_horizon(60)
+        q10_300, q50_300, q90_300 = _predict_horizon(300)
+
+        # Warning / urgency logic
+        if q90_60 >= self.warning_threshold:
+            urgency = "CRITICAL"
+            is_crossing = True
+            horizon = 60
+            msg = (
+                f"CRITICAL: QBER upper bound (P90: {q90_60*100:.2f}%) projected to breach "
+                f"warning threshold ({self.warning_threshold*100:.1f}%) within 60 seconds."
+            )
+        elif q90_300 >= self.warning_threshold:
+            urgency = "WARNING"
+            is_crossing = True
+            horizon = 300
+            msg = (
+                f"WARNING: QBER upper bound (P90: {q90_300*100:.2f}%) projected to breach "
+                f"warning threshold ({self.warning_threshold*100:.1f}%) within 5 minutes."
+            )
+        else:
+            urgency = "STABLE"
+            is_crossing = False
+            horizon = None
+            msg = (
+                f"STABLE: No crossing predicted within 5 minutes. "
+                f"P90 @ 60s: {q90_60*100:.2f}%, P90 @ 300s: {q90_300*100:.2f}%."
+            )
+
+        return QuantileForecastResult(
+            current_qber=current_qber,
+            qber_60s_p10=q10_60,
+            qber_60s_p50=q50_60,
+            qber_60s_p90=q90_60,
+            qber_300s_p10=q10_300,
+            qber_300s_p50=q50_300,
+            qber_300s_p90=q90_300,
+            urgency_level=urgency,
+            recommendation_message=msg,
+            is_crossing_predicted=is_crossing,
+            predicted_crossing_horizon_s=horizon,
+        )
+
+    def evaluate_against_baselines(
+        self,
+        X_test: np.ndarray,
+        y_true_60: np.ndarray,
+        y_true_300: np.ndarray,
+        current_qber_test: np.ndarray,
+        slope_test: np.ndarray,
+    ) -> Dict[str, Any]:
+        """
+        Benchmarks Quantile Forecaster against Persistence and Linear Trend baselines.
+        Computes Pinball Loss, Interval Coverage, and Median MAE.
+        """
+        def _pinball(y_t: np.ndarray, y_p: np.ndarray, q: float) -> float:
+            err = y_t - y_p
+            return float(np.mean(np.maximum(q * err, (q - 1.0) * err)))
+
+        results: Dict[str, Any] = {}
+
+        for h, y_t in [(60, y_true_60), (300, y_true_300)]:
+            mask = ~np.isnan(y_t)
+            if np.sum(mask) < 20:
+                continue
+
+            yt_sub = y_t[mask]
+            Xt_sub = X_test[mask]
+            qber_sub = current_qber_test[mask]
+            slope_sub = slope_test[mask]
+
+            # Quantile Forecaster predictions
+            p10 = self.models[f"{h}s_q10"].predict(Xt_sub)
+            p50 = self.models[f"{h}s_q50"].predict(Xt_sub)
+            p90 = self.models[f"{h}s_q90"].predict(Xt_sub)
+
+            # Monotonic sort
+            stacked = np.sort(np.column_stack([p10, p50, p90]), axis=1)
+            p10, p50, p90 = stacked[:, 0], stacked[:, 1], stacked[:, 2]
+
+            # Persistence baseline: y_{t+h} = y_t
+            pred_persist = qber_sub
+
+            # Linear trend baseline: y_{t+h} = y_t + h * slope
+            pred_linear = np.clip(qber_sub + h * slope_sub, 0.0, 0.50)
+
+            # Metrics
+            pb_forecaster = (
+                _pinball(yt_sub, p10, 0.10) +
+                _pinball(yt_sub, p50, 0.50) +
+                _pinball(yt_sub, p90, 0.90)
+            ) / 3.0
+            pb_persist = _pinball(yt_sub, pred_persist, 0.50)
+            pb_linear = _pinball(yt_sub, pred_linear, 0.50)
+
+            mae_forecaster = float(np.mean(np.abs(yt_sub - p50)))
+            mae_persist = float(np.mean(np.abs(yt_sub - pred_persist)))
+            mae_linear = float(np.mean(np.abs(yt_sub - pred_linear)))
+
+            coverage_80 = float(np.mean((yt_sub >= p10) & (yt_sub <= p90)))
+
+            results[f"horizon_{h}s"] = {
+                "quantile_forecaster_pinball_loss": round(pb_forecaster, 5),
+                "persistence_baseline_pinball_loss": round(pb_persist, 5),
+                "linear_baseline_pinball_loss": round(pb_linear, 5),
+                "quantile_forecaster_mae": round(mae_forecaster, 5),
+                "persistence_baseline_mae": round(mae_persist, 5),
+                "linear_baseline_mae": round(mae_linear, 5),
+                "coverage_80pct_interval": round(coverage_80, 4),
+                "eval_sample_count": int(np.sum(mask)),
+            }
+
+        return results
+
+    def save(self, file_path: str) -> None:
+        """Serializes forecaster models."""
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        joblib.dump(
+            {
+                "models": self.models,
+                "quantiles": self.quantiles,
+                "horizons_s": self.horizons_s,
+                "warning_threshold": self.warning_threshold,
+                "abort_threshold": self.abort_threshold,
+                "random_state": self.random_state,
+            },
+            file_path,
+        )
+
+    def load(self, file_path: str) -> None:
+        """Loads serialized forecaster models."""
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"Forecaster artifact not found at {file_path}")
+        payload = joblib.load(file_path)
+        self.models = payload["models"]
+        self.quantiles = payload.get("quantiles", (0.10, 0.50, 0.90))
+        self.horizons_s = payload.get("horizons_s", (60, 300))
+        self.warning_threshold = payload.get("warning_threshold", 0.08)
+        self.abort_threshold = payload.get("abort_threshold", 0.11)
+        self.is_fitted = True
+

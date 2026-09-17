@@ -1,0 +1,79 @@
+{
+  "timestamp": "2026-09-17T08:40:14Z",
+  "total_matched_episodes": 30,
+  "episodes_per_condition": 5,
+  "timesteps_per_episode": 120,
+  "overall_metrics": {
+    "default_total_keys_bits": 2387525520.334509,
+    "vectorq_total_keys_bits": 3733968778.822279,
+    "net_key_yield_gain_pct": 56.39,
+    "default_total_downtime_s": 850.0,
+    "vectorq_total_downtime_s": 123.0,
+    "downtime_reduction_pct": 85.53,
+    "total_successful_actuations": 25,
+    "total_failed_inappropriate_actuations": 0,
+    "inappropriate_action_rate_pct": 0.0
+  },
+  "per_condition_breakdown": {
+    "Normal Operation": {
+      "default_mean_keys_bits": 145851290.7196493,
+      "vectorq_mean_keys_bits": 145851290.7196493,
+      "key_yield_gain_pct": 0.0,
+      "default_mean_downtime_s": 0.0,
+      "vectorq_mean_downtime_s": 0.0,
+      "vectorq_mean_recovery_time_s": "N/A",
+      "total_failed_actions": 0,
+      "total_successful_actions": 0
+    },
+    "Thermal Drift": {
+      "default_mean_keys_bits": 143700247.60493204,
+      "vectorq_mean_keys_bits": 145826905.75369394,
+      "key_yield_gain_pct": 1.48,
+      "default_mean_downtime_s": 0.0,
+      "vectorq_mean_downtime_s": 0.0,
+      "vectorq_mean_recovery_time_s": 0.0,
+      "total_failed_actions": 0,
+      "total_successful_actions": 5
+    },
+    "Optical Misalignment": {
+      "default_mean_keys_bits": 42732540.930267945,
+      "vectorq_mean_keys_bits": 144471723.26792452,
+      "key_yield_gain_pct": 238.08,
+      "default_mean_downtime_s": 85.0,
+      "vectorq_mean_downtime_s": 1.0,
+      "vectorq_mean_recovery_time_s": 1.0,
+      "total_failed_actions": 0,
+      "total_successful_actions": 5
+    },
+    "Channel Loss Event": {
+      "default_mean_keys_bits": 53502697.03385392,
+      "vectorq_mean_keys_bits": 144292934.63926345,
+      "key_yield_gain_pct": 169.69,
+      "default_mean_downtime_s": 0.0,
+      "vectorq_mean_downtime_s": 0.0,
+      "vectorq_mean_recovery_time_s": 0.0,
+      "total_failed_actions": 0,
+      "total_successful_actions": 5
+    },
+    "Combined Fault (Thermal + Misalignment)": {
+      "default_mean_keys_bits": 42275308.35723601,
+      "vectorq_mean_keys_bits": 116907881.96296208,
+      "key_yield_gain_pct": 176.54,
+      "default_mean_downtime_s": 85.0,
+      "vectorq_mean_downtime_s": 23.6,
+      "vectorq_mean_recovery_time_s": 23.6,
+      "total_failed_actions": 0,
+      "total_successful_actions": 10
+    },
+    "Unfamiliar Anomaly (OOD Perturbation)": {
+      "default_mean_keys_bits": 49443019.42096254,
+      "vectorq_mean_keys_bits": 49443019.42096254,
+      "key_yield_gain_pct": 0.0,
+      "default_mean_downtime_s": 0.0,
+      "vectorq_mean_downtime_s": 0.0,
+      "vectorq_mean_recovery_time_s": "N/A",
+      "total_failed_actions": 0,
+      "total_successful_actions": 0
+    }
+  }
+}

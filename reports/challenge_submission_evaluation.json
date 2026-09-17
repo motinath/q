@@ -1,0 +1,147 @@
+{
+  "evaluation_timestamp": "2026-09-17T08:40:14Z",
+  "openqkd_real_field_validation": {
+    "dataset_path": "G:\\My Drive\\q\\data\\real_field_telemetry.parquet",
+    "dataset_sha256": "b343ee9b14ce6de5cc1c3a927cc12872a4355bcbef00914d3477a5f676ddc989",
+    "duration_hours": 24.0,
+    "total_samples": 1440,
+    "fiber_length_km": 22.7,
+    "testbed_standard": "ETSI GS QKD 014 / OpenQKD (Geneva-CERN spec)",
+    "ambient_temp_range": "16.5 C (night) to 33.5 C (afternoon peak)",
+    "diurnal_fpr": 0.0674,
+    "incident_recall": 0.9508,
+    "incident_precision": 0.4677,
+    "incident_f1": 0.627,
+    "incident_rca_accuracy": 0.3279,
+    "peak_rca_accuracy": 0.4242,
+    "early_warning_lead_time_min": 18.5,
+    "session_downtime_seconds": 0.0,
+    "link_availability_pct": 100.0
+  },
+  "challenge_dataset": {
+    "path": "G:\\My Drive\\q\\data\\challenge_episodes.parquet",
+    "sha256": "4f96963d747e7b291dc4aa7e86699ed536e73cb95e3b06edbb758d64a184d62d",
+    "total_records": 120000,
+    "total_runs": 300
+  },
+  "rca_metrics": {
+    "Thermal Drift": {
+      "precision": 1.0,
+      "recall": 0.9492,
+      "f1": 0.9739
+    },
+    "Optical Misalignment": {
+      "precision": 1.0,
+      "recall": 0.9196,
+      "f1": 0.9581
+    },
+    "Increased Channel Loss": {
+      "precision": 0.9996,
+      "recall": 0.9673,
+      "f1": 0.9832
+    },
+    "combined_fault_exact_match": 0.9117,
+    "unfamiliar_insufficient_evidence_rate": 1.0
+  },
+  "predictive_maintenance_benchmark": {
+    "horizon_60s": {
+      "quantile_forecaster_pinball_loss": 0.00373,
+      "persistence_baseline_pinball_loss": 0.00483,
+      "linear_baseline_pinball_loss": 0.00902,
+      "quantile_forecaster_mae": 0.00964,
+      "persistence_baseline_mae": 0.00965,
+      "linear_baseline_mae": 0.01804,
+      "coverage_80pct_interval": 0.8225,
+      "eval_sample_count": 20400
+    },
+    "horizon_300s": {
+      "quantile_forecaster_pinball_loss": 0.00628,
+      "persistence_baseline_pinball_loss": 0.01079,
+      "linear_baseline_pinball_loss": 0.03627,
+      "quantile_forecaster_mae": 0.02142,
+      "persistence_baseline_mae": 0.02158,
+      "linear_baseline_mae": 0.07254,
+      "coverage_80pct_interval": 0.77,
+      "eval_sample_count": 6000
+    }
+  },
+  "closed_loop_optimization": {
+    "timestamp": "2026-09-17T08:40:14Z",
+    "total_matched_episodes": 30,
+    "episodes_per_condition": 5,
+    "timesteps_per_episode": 120,
+    "overall_metrics": {
+      "default_total_keys_bits": 2387525520.334509,
+      "vectorq_total_keys_bits": 3733968778.822279,
+      "net_key_yield_gain_pct": 56.39,
+      "default_total_downtime_s": 850.0,
+      "vectorq_total_downtime_s": 123.0,
+      "downtime_reduction_pct": 85.53,
+      "total_successful_actuations": 25,
+      "total_failed_inappropriate_actuations": 0,
+      "inappropriate_action_rate_pct": 0.0
+    },
+    "per_condition_breakdown": {
+      "Normal Operation": {
+        "default_mean_keys_bits": 145851290.7196493,
+        "vectorq_mean_keys_bits": 145851290.7196493,
+        "key_yield_gain_pct": 0.0,
+        "default_mean_downtime_s": 0.0,
+        "vectorq_mean_downtime_s": 0.0,
+        "vectorq_mean_recovery_time_s": "N/A",
+        "total_failed_actions": 0,
+        "total_successful_actions": 0
+      },
+      "Thermal Drift": {
+        "default_mean_keys_bits": 143700247.60493204,
+        "vectorq_mean_keys_bits": 145826905.75369394,
+        "key_yield_gain_pct": 1.48,
+        "default_mean_downtime_s": 0.0,
+        "vectorq_mean_downtime_s": 0.0,
+        "vectorq_mean_recovery_time_s": 0.0,
+        "total_failed_actions": 0,
+        "total_successful_actions": 5
+      },
+      "Optical Misalignment": {
+        "default_mean_keys_bits": 42732540.930267945,
+        "vectorq_mean_keys_bits": 144471723.26792452,
+        "key_yield_gain_pct": 238.08,
+        "default_mean_downtime_s": 85.0,
+        "vectorq_mean_downtime_s": 1.0,
+        "vectorq_mean_recovery_time_s": 1.0,
+        "total_failed_actions": 0,
+        "total_successful_actions": 5
+      },
+      "Channel Loss Event": {
+        "default_mean_keys_bits": 53502697.03385392,
+        "vectorq_mean_keys_bits": 144292934.63926345,
+        "key_yield_gain_pct": 169.69,
+        "default_mean_downtime_s": 0.0,
+        "vectorq_mean_downtime_s": 0.0,
+        "vectorq_mean_recovery_time_s": 0.0,
+        "total_failed_actions": 0,
+        "total_successful_actions": 5
+      },
+      "Combined Fault (Thermal + Misalignment)": {
+        "default_mean_keys_bits": 42275308.35723601,
+        "vectorq_mean_keys_bits": 116907881.96296208,
+        "key_yield_gain_pct": 176.54,
+        "default_mean_downtime_s": 85.0,
+        "vectorq_mean_downtime_s": 23.6,
+        "vectorq_mean_recovery_time_s": 23.6,
+        "total_failed_actions": 0,
+        "total_successful_actions": 10
+      },
+      "Unfamiliar Anomaly (OOD Perturbation)": {
+        "default_mean_keys_bits": 49443019.42096254,
+        "vectorq_mean_keys_bits": 49443019.42096254,
+        "key_yield_gain_pct": 0.0,
+        "default_mean_downtime_s": 0.0,
+        "vectorq_mean_downtime_s": 0.0,
+        "vectorq_mean_recovery_time_s": "N/A",
+        "total_failed_actions": 0,
+        "total_successful_actions": 0
+      }
+    }
+  }
+}
