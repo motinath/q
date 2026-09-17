@@ -69,6 +69,11 @@ class VectorQBenchmarkSuite:
         os.makedirs(self.reports_dir, exist_ok=True)
 
         # Load benchmark datasets
+        if not os.path.exists(os.path.join(self.data_dir, "normal_dataset.parquet")):
+            sim_dir = os.path.join(self.data_dir, "simulation")
+            if os.path.exists(os.path.join(sim_dir, "normal_dataset.parquet")):
+                self.data_dir = sim_dir
+
         print("[BENCHMARK] Loading standardized datasets from", self.data_dir)
         self.df_normal = pd.read_parquet(os.path.join(self.data_dir, "normal_dataset.parquet"))
         self.df_single = pd.read_parquet(os.path.join(self.data_dir, "single_fault_dataset.parquet"))

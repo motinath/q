@@ -1,6 +1,6 @@
 {
   "dataset_label": "Independent Real Experimental QKD Dataset (Toshiba/IDQ)",
-  "evaluation_timestamp": "2026-09-17T13:26:46Z",
+  "evaluation_timestamp": "2026-09-17T16:10:10Z",
   "data_source_directory": "G:\\My Drive\\q\\data\\external_validation",
   "total_csv_files": 23,
   "total_records_ingested": 54531,

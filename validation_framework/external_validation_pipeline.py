@@ -73,8 +73,9 @@ class ExternalQKDValidationPipeline:
     def __init__(self, data_dir: str = None, output_dir: str = None):
         self.data_dir = data_dir or os.path.join(REPO_ROOT, "data", "external_validation")
         self.output_dir = output_dir or os.path.join(REPO_ROOT, "reports")
-        self.figures_dir = os.path.join(self.output_dir, "external_validation_figures")
+        self.figures_dir = os.path.join(self.output_dir, "figures")
         os.makedirs(self.figures_dir, exist_ok=True)
+        os.makedirs(os.path.join(self.output_dir, "archive"), exist_ok=True)
         
         self.results: Dict[str, Any] = {
             "dataset_label": EXTERNAL_DATASET_LABEL,
@@ -616,9 +617,9 @@ class ExternalQKDValidationPipeline:
 
     def generate_markdown_report(self):
         """
-        Compiles reports/external_validation_report.md.
+        Compiles reports/archive/external_validation_report.md.
         """
-        report_path = os.path.join(self.output_dir, "external_validation_report.md")
+        report_path = os.path.join(self.output_dir, "archive", "external_validation_report.md")
         ad = self.results.get("anomaly_detection", {})
         fc = self.results.get("forecasting", {})
         comp = self.results.get("synthetic_vs_real_comparison", {})

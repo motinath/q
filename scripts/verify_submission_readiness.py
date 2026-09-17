@@ -44,9 +44,8 @@ def run_readiness_audit() -> bool:
     offending_file = ""
     this_script = os.path.abspath(__file__)
     for root, dirs, files in os.walk(PROJECT_ROOT):
-        # Exclude git, pycache, venv, and caches
-        if any(ex in root for ex in [".git", "__pycache__", ".venv", ".pytest_cache"]):
-            continue
+        # Exclude git, pycache, venv, caches, archive, and raw external data
+        dirs[:] = [d for d in dirs if d not in [".git", "__pycache__", ".venv", ".pytest_cache", "archive", ".gemini", "external_validation"]]
         for f in files:
             if f.endswith((".py", ".md", ".json")):
                 p = os.path.join(root, f)
@@ -83,17 +82,20 @@ def run_readiness_audit() -> bool:
 
     # 3. Standardized Benchmark Datasets
     data_files = [
-        "data/normal_dataset.parquet",
-        "data/normal_dataset.csv",
-        "data/single_fault_dataset.parquet",
-        "data/single_fault_dataset.csv",
-        "data/mixed_fault_dataset.parquet",
-        "data/mixed_fault_dataset.csv",
-        "data/unknown_fault_dataset.parquet",
-        "data/unknown_fault_dataset.csv",
-        "data/dataset_manifest.json",
+        "normal_dataset.parquet",
+        "normal_dataset.csv",
+        "single_fault_dataset.parquet",
+        "single_fault_dataset.csv",
+        "mixed_fault_dataset.parquet",
+        "mixed_fault_dataset.csv",
+        "unknown_fault_dataset.parquet",
+        "unknown_fault_dataset.csv",
+        "dataset_manifest.json",
     ]
-    all_data_exist = all((PROJECT_ROOT / f).exists() for f in data_files)
+    all_data_exist = all(
+        (PROJECT_ROOT / "data" / "simulation" / f).exists() or (PROJECT_ROOT / "data" / f).exists()
+        for f in data_files
+    )
     check("Benchmark Datasets Generated & Verified", all_data_exist, f"{len(data_files)} artifacts verified")
 
     # 4. Core Model Checkpoints
@@ -143,15 +145,16 @@ def run_readiness_audit() -> bool:
     net_states = multi_orch.process_network_timestep()
     check("Multi-Link Network Orchestrator Functioning", len(net_states) == 8, f"Active Links: {len(net_states)}")
 
-    # 8. Forensic Reports Package
-    report_files = [
-        "reports/technical_report.md",
-        "reports/benchmark_report.md",
-        "reports/demonstration_report.md",
-        "reports/reproducibility_package.md",
+    # 8. Forensic & Submission Documentation Package
+    doc_files = [
+        "docs/architecture.md",
+        "docs/methodology.md",
+        "docs/dataset_provenance.md",
+        "docs/reproducibility.md",
+        "docs/submission_summary.md",
     ]
-    all_reports_exist = all((PROJECT_ROOT / f).exists() for f in report_files)
-    check("Challenge Documentation Package Complete", all_reports_exist, "Technical, Benchmark, Demo & Repro Reports")
+    all_docs_exist = all((PROJECT_ROOT / f).exists() for f in doc_files)
+    check("Challenge Documentation Package Complete", all_docs_exist, "Architecture, Methodology, Provenance, Repro, & Summary")
 
     print("\n" + "=" * 78)
     print(f"AUDIT SCORE: {passed_checks}/{total_checks} CHECKS PASSED ({(passed_checks/total_checks)*100:.1f}%)")

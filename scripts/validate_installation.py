@@ -29,11 +29,11 @@ def validate_installation():
     if sys.version_info < (3, 10):
         errors.append(f"Python 3.10+ required, found {sys.version_info.major}.{sys.version_info.minor}")
         print(f"   [FAIL] Python {sys.version_info.major}.{sys.version_info.minor} (need 3.10+)")
-    elif sys.version_info >= (3, 11):
-        warnings.append(f"Python 3.10 recommended, found {sys.version_info.major}.{sys.version_info.minor}")
-        print(f"   [WARN] Python {sys.version_info.major}.{sys.version_info.minor} (3.10 recommended)")
+    elif sys.version_info > (3, 14):
+        warnings.append(f"Python 3.10-3.14 recommended, found {sys.version_info.major}.{sys.version_info.minor}")
+        print(f"   [WARN] Python {sys.version_info.major}.{sys.version_info.minor} (3.10-3.14 tested)")
     else:
-        print(f"   [OK] Python {sys.version_info.major}.{sys.version_info.minor}")
+        print(f"   [OK] Python {sys.version_info.major}.{sys.version_info.minor} (Supported: 3.10 - 3.14)")
     
     # 2. Check required packages
     print("\n2. Checking required packages...")
@@ -51,7 +51,7 @@ def validate_installation():
             print(f"   [OK] {package}")
         except ImportError:
             errors.append(f"Missing required package: {package}")
-            print(f"   [FAIL] {package} (MISSING)")
+            print(f"   [FAIL] {package} (NOT INSTALLED)")
     
     # 3. Check optional packages
     print("\n3. Checking optional packages...")
@@ -81,7 +81,7 @@ def validate_installation():
         'operations_dashboard'
     ]
     
-    project_root = Path(__file__).parent
+    project_root = Path(__file__).resolve().parent.parent if Path(__file__).parent.name == "scripts" else Path(__file__).resolve().parent
     for dir_name in required_dirs:
         dir_path = project_root / dir_name
         if dir_path.exists():
