@@ -1,4 +1,4 @@
-# VECTOR Q Troubleshooting Guide
+# Q-SENTINEL Troubleshooting Guide
 
 This guide covers common issues and solutions.
 
@@ -8,22 +8,23 @@ This guide covers common issues and solutions.
 
 ### Issue: "ModuleNotFoundError" when running scripts
 
-**Cause**: Python can't find the VECTOR Q modules
+**Cause**: Python can't find the Q-SENTINEL modules
 
 **Solutions**:
+
 ```bash
 # Solution 1: Run from project root
-cd path/to/vector-q
+cd path/to/q-sentinel
 python scripts/train_attribution_models.py
 
 # Solution 2: Use pytest (automatically adds project to path)
 python -m pytest tests/run_basic_test.py -v -s
 
 # Solution 3: Add to PYTHONPATH (Windows)
-$env:PYTHONPATH = "path\to\vector-q"
+$env:PYTHONPATH = "path\to\q-sentinel"
 
 # Solution 3: Add to PYTHONPATH (Linux/Mac)
-export PYTHONPATH="/path/to/vector-q:$PYTHONPATH"
+export PYTHONPATH="/path/to/q-sentinel:$PYTHONPATH"
 ```
 
 ---
@@ -33,6 +34,7 @@ export PYTHONPATH="/path/to/vector-q:$PYTHONPATH"
 **Cause**: Version mismatch between numpy and other packages
 
 **Solution**:
+
 ```bash
 # Reinstall with compatible versions
 pip uninstall numpy pandas scipy scikit-learn -y
@@ -46,6 +48,7 @@ pip install numpy==1.26.4 pandas scipy scikit-learn
 **Cause**: Missing SHAP package
 
 **Solution**:
+
 ```bash
 pip install shap
 ```
@@ -59,6 +62,7 @@ pip install shap
 **Cause**: Outdated training script
 
 **Solution**: Already fixed in latest version. If still occurs:
+
 ```bash
 # Re-download train_attribution_models.py from repository
 # Or update manually - the classifier doesn't use a scaler
@@ -71,6 +75,7 @@ pip install shap
 **Cause**: Large dataset generation or slow CPU
 
 **Solutions**:
+
 ```bash
 # Reduce training samples (edit scripts/train_attribution_models.py)
 # Change: n_training_runs=70 → n_training_runs=30
@@ -84,11 +89,12 @@ python scripts/train_attribution_models.py --quick
 
 ## Testing Issues
 
-### Issue: Tests fail with "TypeError: __init__() got an unexpected keyword argument"
+### Issue: Tests fail with "TypeError: **init**() got an unexpected keyword argument"
 
 **Cause**: Incorrect parameter names in test files
 
 **Solution**: All test files have been updated with correct parameters:
+
 - `QuantumTelemetryEmulator(random_seed=42)` ✓
 - `QKDNetworkOrchestrator(emulator=emulator)` ✓
 - `MockQKDHardware(link_id="test")` ✓
@@ -102,6 +108,7 @@ If error persists, verify you're using the latest test files.
 **Cause**: Test file doesn't have test functions or proper structure
 
 **Solution**:
+
 ```bash
 # Use -s flag to see output from print statements
 python -m pytest tests/run_basic_test.py -v -s
@@ -118,6 +125,7 @@ python tests/run_basic_test.py
 **Cause**: Test uses unrealistic telemetry values
 
 **Solution**: Already fixed. The test now uses realistic values:
+
 - `raw_counts_hz=2000000.0` (2 Mcps for 25km link)
 - `signal_to_noise_ratio=4500.0` (realistic SNR)
 
@@ -130,13 +138,14 @@ python tests/run_basic_test.py
 **Cause**: Multiple processes accessing audit database
 
 **Solution**:
+
 ```bash
-# Close all VECTOR Q processes
+# Close all Q-SENTINEL processes
 # Delete the lock file
-rm vector_q_audit.db-journal
+rm q_sentinel_audit.db-journal
 
 # Or use a new database
-rm vector_q_audit.db
+rm q_sentinel_audit.db
 ```
 
 ---
@@ -146,6 +155,7 @@ rm vector_q_audit.db
 **Cause**: Large telemetry buffers or model loading
 
 **Solutions**:
+
 ```python
 # Reduce buffer size in config/qkd_system_parameters.py
 TELEMETRY_WINDOW_SIZE = 25  # Change to 15
@@ -161,6 +171,7 @@ orchestrator.feature_extractor.clear_buffers()
 **Cause**: Optional packages for advanced features not installed
 
 **Solution**: These are **optional** - system works with fallback modes:
+
 ```bash
 # Install optional packages if you want full features
 pip install pgmpy lifelines nonconformist torch torch-geometric
@@ -177,6 +188,7 @@ pip install pgmpy lifelines nonconformist torch torch-geometric
 **Cause**: Streamlit not installed or not in PATH
 
 **Solution**:
+
 ```bash
 pip install streamlit
 streamlit run operations_dashboard/streamlit_app.py
@@ -189,6 +201,7 @@ streamlit run operations_dashboard/streamlit_app.py
 **Cause**: Models not trained yet
 
 **Solution**:
+
 ```bash
 # Train models first
 python scripts/train_attribution_models.py
@@ -206,6 +219,7 @@ streamlit run operations_dashboard/streamlit_app.py
 **Cause**: SNMP library not available
 
 **Solution**: This is **optional** for real hardware:
+
 ```bash
 # For real ID Quantique hardware, install:
 pip install pysnmp
@@ -223,6 +237,7 @@ from hardware_interface import MockQKDHardware
 **Cause**: Feature extraction or model prediction overhead
 
 **Solutions**:
+
 ```python
 # 1. Reduce feature window
 TELEMETRY_WINDOW_SIZE = 15  # Instead of 25
@@ -247,6 +262,7 @@ orchestrator = AdvancedQKDOrchestrator(
 **Cause**: Data manifest not generated
 
 **Solution**:
+
 ```bash
 # Generate data splits
 python -c "from validation_framework.data_split_manifest import create_and_export_data_splits_manifest; create_and_export_data_splits_manifest()"
@@ -261,6 +277,7 @@ python -c "from validation_framework.data_split_manifest import create_and_expor
 **Cause**: Multiple Python versions
 
 **Solution**:
+
 ```bash
 # Windows: Use specific Python version
 C:\Users\YourName\AppData\Local\Programs\Python\Python310\python.exe -m venv .venv
@@ -279,11 +296,13 @@ python --version  # Should show Python 3.10.x
 ## Still Having Issues?
 
 ### Run the validation script:
+
 ```bash
 python validate_installation.py
 ```
 
 This will check:
+
 - Python version
 - Required packages
 - Project structure
@@ -291,15 +310,17 @@ This will check:
 - Module imports
 
 ### Check logs:
+
 ```bash
 # View audit log
-sqlite3 vector_q_audit.db "SELECT * FROM audit_log ORDER BY timestamp DESC LIMIT 10;"
+sqlite3 q_sentinel_audit.db "SELECT * FROM audit_log ORDER BY timestamp DESC LIMIT 10;"
 
 # Check model files
 ls -lh models/
 ```
 
 ### Get system info:
+
 ```python
 import sys
 import numpy as np
@@ -318,16 +339,16 @@ print(f"LightGBM: {lightgbm.__version__}")
 
 ## Quick Fixes Summary
 
-| Issue | Quick Fix |
-|-------|-----------|
-| Import errors | Run from project root or use `python -m pytest` |
-| Training fails | Install missing packages: `pip install -r requirements.txt` |
-| Tests fail | Use updated test files with correct parameter names |
-| No models | Run: `python scripts/train_attribution_models.py` |
-| Warnings | Optional packages - ignore or install for full features |
-| Slow performance | Reduce buffer size or use fewer estimators |
-| Database locked | Close all processes, delete `.db-journal` file |
-| Wrong Python | Use Python 3.10 explicitly in venv creation |
+| Issue            | Quick Fix                                                   |
+| ---------------- | ----------------------------------------------------------- |
+| Import errors    | Run from project root or use `python -m pytest`             |
+| Training fails   | Install missing packages: `pip install -r requirements.txt` |
+| Tests fail       | Use updated test files with correct parameter names         |
+| No models        | Run: `python scripts/train_attribution_models.py`           |
+| Warnings         | Optional packages - ignore or install for full features     |
+| Slow performance | Reduce buffer size or use fewer estimators                  |
+| Database locked  | Close all processes, delete `.db-journal` file              |
+| Wrong Python     | Use Python 3.10 explicitly in venv creation                 |
 
 ---
 
