@@ -159,8 +159,10 @@ class IsolationForestAnomalyDetector:
             if lo is not None and hi is not None:
                 if val < lo or val > hi:
                     # Store signed deviation in sigma units
-                    sigma = max(1e-10, envelope.std)
-                    violations[feat_name] = (val - envelope.ewma) / sigma
+                    std_val = getattr(envelope, "std_dev", getattr(envelope, "std", 1e-10))
+                    ewma_val = getattr(envelope, "ewma_value", getattr(envelope, "ewma", getattr(envelope, "mean", 0.0)))
+                    sigma = max(1e-10, std_val)
+                    violations[feat_name] = (val - ewma_val) / sigma
 
         n_violations = len(violations)
 

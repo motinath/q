@@ -3,7 +3,7 @@ Base Hardware Interface
 
 Abstract base class for all QKD hardware interfaces.
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 

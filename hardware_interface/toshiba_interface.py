@@ -3,7 +3,7 @@ Toshiba QKD Hardware Interface
 
 Interface for Toshiba QKD systems.
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 

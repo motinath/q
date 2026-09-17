@@ -1,5 +1,5 @@
 """
-Master Validation & Compliance Benchmark Runner for Q-SENTINEL (QIC 2026 Edition)
+Master Validation & Compliance Benchmark Runner for VECTOR Q (QIC 2026 Edition)
 Executes:
 1. Target vs Measured Engineering Verification Table (Phase 0)
 2. Validation Set A: Analytical Physics Unit Assertions
@@ -31,7 +31,7 @@ from validation_framework.latency_profiler import profile_pipeline_latencies
 
 def execute_full_validation_suite() -> None:
     print("================================================================================", flush=True)
-    print("      Q-SENTINEL (QIC 2026 EDITION) — MASTER SCIENTIFIC VALIDATION REPORT       ", flush=True)
+    print("      VECTOR Q (QIC 2026 EDITION) — MASTER SCIENTIFIC VALIDATION REPORT       ", flush=True)
     print("================================================================================", flush=True)
     
     # 1. Validation Set A (Physics Unit Assertions)
@@ -87,8 +87,8 @@ def execute_full_validation_suite() -> None:
                 print(f"\n    {model_name.upper().replace('_', ' ')}:", flush=True)
                 for attack_type, metrics_list in results.items():
                     for metrics in metrics_list:
-                        if metrics.epsilon_tested == 0.1:  # Report ε=0.1 results
-                            print(f"      {attack_type:8s} (ε=0.1): Misclass={metrics.misclassification_rate*100:5.1f}%, "
+                        if metrics.epsilon_tested == 0.1:  # Report eps=0.1 results
+                            print(f"      {attack_type:8s} (eps=0.1): Misclass={metrics.misclassification_rate*100:5.1f}%, "
                                   f"ConfDrop={metrics.avg_confidence_drop:.3f}, Plausible={metrics.physically_plausible_attacks_pct:.1f}%",
                                   flush=True)
     except Exception as e:

@@ -478,7 +478,7 @@ class RemediationOptimizer:
                     "id": "ACTION_NOMINAL_PASSIVE_MONITORING",
                     "title": "Autonomous Passive Telemetry Monitoring",
                     "desc": "Maintain nominal link operation, stream continuous telemetry, and preserve key distillation.",
-                    "subsystem": "Q-Sentinel Supervisor",
+                    "subsystem": "Vector Q Supervisor",
                     "t_exec": 1.0,
                     "risk": 0.01,
                     "state": {"alpha": curr_alpha, "vis": curr_vis, "temp": curr_temp, "dcr": curr_dcr, "jitter": curr_jitter, "eve": 0.0},
@@ -602,10 +602,10 @@ class RemediationOptimizer:
                 "target_subsystem": winner.target_subsystem,
                 "execution_time_seconds": winner.execution_time_seconds,
                 "current_qber": round(curr_qber, 4),
-                "trigger": "Q_SENTINEL_AUTONOMOUS_EMERGENCY_RESPONSE",
+                "trigger": "VECTOR_Q_AUTONOMOUS_EMERGENCY_RESPONSE",
             }
             print(
-                f"[Q-SENTINEL EMERGENCY ACTUATION] {json.dumps(actuation_signal)}",
+                f"[VECTOR Q EMERGENCY ACTUATION] {json.dumps(actuation_signal)}",
                 file=sys.stderr,
                 flush=True,
             )

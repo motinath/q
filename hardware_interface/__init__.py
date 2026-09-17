@@ -10,7 +10,7 @@ Supported systems:
 - Generic SNMP/REST API interfaces
 """
 
-from .base_hardware_interface import BaseQKDHardwareInterface
+from .base_hardware_interface import BaseQKDHardwareInterface, HardwareTelemetry, MockQKDHardware
 from .id_quantique_interface import IDQuantiqueInterface
 from .toshiba_interface import ToshibaQKDInterface
 from .generic_snmp_interface import GenericSNMPInterface
@@ -18,6 +18,8 @@ from .generic_rest_interface import GenericRESTInterface
 
 __all__ = [
     'BaseQKDHardwareInterface',
+    'HardwareTelemetry',
+    'MockQKDHardware',
     'IDQuantiqueInterface',
     'ToshibaQKDInterface',
     'GenericSNMPInterface',

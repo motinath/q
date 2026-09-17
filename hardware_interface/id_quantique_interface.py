@@ -4,7 +4,7 @@ ID Quantique Hardware Interface
 Interface for ID Quantique QKD systems (Clavis, Cerberis).
 Uses SNMP and proprietary API.
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 

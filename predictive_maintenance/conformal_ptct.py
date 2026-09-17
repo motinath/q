@@ -4,7 +4,7 @@ Conformal Prediction PTCT Module
 Distribution-free confidence intervals with guaranteed coverage for
 time-to-threshold forecasting. Provides calibrated uncertainty quantification.
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 

@@ -3,7 +3,7 @@ Generic SNMP Hardware Interface
 
 For QKD systems with standard SNMP management.
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 

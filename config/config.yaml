@@ -1,11 +1,11 @@
-# Q-SENTINEL System Configuration & Parameters
+# VECTOR Q System Configuration & Parameters
 # Documented Origins:
 # - Theory-derived: Standard quantum optics equations (Scarani 2009, GLLP 2004, Ma 2005)
 # - Calibration-derived: Typical InGaAs/InP gated SPAD & SMF-28 specifications
 # - Operator-configured: QNOC alert thresholds & sliding window sizes
 
 system:
-  name: "Q-SENTINEL"
+  name: "VECTOR Q"
   version: "2026.1-QIC"
   description: "ML-based, physics-governed diagnostics and predictive maintenance for QKD networks"
 

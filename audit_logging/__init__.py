@@ -1,5 +1,5 @@
 """
-Audit Logging and Compliance Module for Q-SENTINEL.
+Audit Logging and Compliance Module for VECTOR Q.
 Provides tamper-evident SQLite telemetry event persistence and historical replay.
 """
 

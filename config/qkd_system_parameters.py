@@ -55,6 +55,12 @@ class QKDPhysicsConfig:
     time_shift_min_qber: float = 0.065                    # Elevated error in shifted gating window
     pns_max_qber_threshold: float = 0.060                 # PNS maintains moderate QBER while attacking multi-photons
 
+    @property
+    def qber_critical_threshold(self) -> float:
+        """Alias for qber_abort_threshold (11.0% GLLP security abort limit)."""
+        return self.qber_abort_threshold
+
+
 
 # Layer 0: Standardized 10-Class Fault and Attack Ontology
 ROOT_CAUSE_CLASSES: List[str] = [
@@ -86,3 +92,6 @@ ALARM_SEVERITY_LEVELS: Dict[str, str] = {
     "Photon Number Splitting": "CRITICAL",   # Multi-photon pulse splitting attack
     "Time-Shift Attack": "CRITICAL",         # Gating window phase attack
 }
+
+# Compatibility alias
+QKDSystemParameters = QKDPhysicsConfig

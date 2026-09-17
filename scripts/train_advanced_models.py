@@ -1,5 +1,5 @@
 """
-Advanced Model Training Pipeline for Q-SENTINEL 2.0
+Advanced Model Training Pipeline for VECTOR Q 2.0
 
 Trains all advanced models:
 - Survival Analysis (Cox Proportional Hazards)
@@ -8,7 +8,7 @@ Trains all advanced models:
 - Causal Bayesian Networks
 - Dynamic Bayesian Networks
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 
@@ -42,7 +42,7 @@ from validation_framework.data_split_manifest import (
 
 class AdvancedModelTrainer:
     """
-    Unified trainer for all advanced Q-SENTINEL models.
+    Unified trainer for all advanced VECTOR Q models.
     """
     
     def __init__(
@@ -64,7 +64,7 @@ class AdvancedModelTrainer:
         os.makedirs(output_dir, exist_ok=True)
         
         self.logger.info("=" * 80)
-        self.logger.info("Q-SENTINEL 2.0 Advanced Model Training Pipeline")
+        self.logger.info("VECTOR Q 2.0 Advanced Model Training Pipeline")
         self.logger.info("=" * 80)
     
     def generate_training_data(self) -> Dict[str, Any]:
@@ -473,7 +473,7 @@ class AdvancedModelTrainer:
 # ============================================================================
 
 def main():
-    parser = argparse.ArgumentParser(description="Train Q-SENTINEL 2.0 advanced models")
+    parser = argparse.ArgumentParser(description="Train VECTOR Q 2.0 advanced models")
     parser.add_argument("--output-dir", default="models/advanced", help="Output directory for models")
     parser.add_argument("--version", default="2.0.0", help="Model version")
     parser.add_argument("--log-level", default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR"])

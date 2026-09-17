@@ -8,10 +8,10 @@ Author: Senior Quantum Systems & Applied ML Engineering Team
 import time
 import math
 import numpy as np
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Union
 from dataclasses import dataclass
 
-from config.qkd_system_parameters import QKDPhysicsConfig
+from config.qkd_system_parameters import QKDPhysicsConfig, ROOT_CAUSE_ID_TO_LABEL
 from physics_engine.optical_channel_models import (
     compute_channel_transmittance,
     compute_dark_count_probability,
@@ -82,22 +82,25 @@ class QuantumTelemetryEmulator:
         """Sets random seed for reproducible validation sets."""
         self.rng = np.random.RandomState(seed)
 
-    def inject_fault(self, fault_name: str, intensity: float = 1.0) -> None:
+    def inject_fault(self, fault_name: Union[str, int], intensity: float = 1.0) -> None:
         """
         Perturbs physical state parameters corresponding to specific physical fault modes.
+        Supports both string class names and integer IDs.
         
         Standard 10-Class Ontology:
-            - 'Normal': Baseline nominal operating condition
-            - 'Optical Misalignment': Polarization rotation / interferometer drift (reduces V)
-            - 'Channel Attenuation Event': Fiber bend, dirty connector or extra physical loss
-            - 'Detector APD Degradation': Trap degradation causing elevated baseline DCR
-            - 'Thermal Drift': TEC failure or cooler saturation raising APD temperature
-            - 'Timing Jitter': Clock phase jitter or laser diode timing dispersion
-            - 'Intercept-Resend': Eve intercepts fraction gamma of optical pulses
-            - 'Detector Blinding': CW bright light saturation (Makarov et al., 2009)
-            - 'Photon Number Splitting': Multi-photon pulse splitting on weak coherent source
-            - 'Time-Shift Attack': Temporal gating offset / efficiency mismatch (Zhao et al., 2008)
+            - 'Normal' (0): Baseline nominal operating condition
+            - 'Optical Misalignment' (1): Polarization rotation / interferometer drift (reduces V)
+            - 'Channel Attenuation Event' (2): Fiber bend, dirty connector or extra physical loss
+            - 'Detector APD Degradation' (3): Trap degradation causing elevated baseline DCR
+            - 'Thermal Drift' (4): TEC failure or cooler saturation raising APD temperature
+            - 'Timing Jitter' (5): Clock phase jitter or laser diode timing dispersion
+            - 'Intercept-Resend' (6): Eve intercepts fraction gamma of optical pulses
+            - 'Detector Blinding' (7): CW bright light saturation (Makarov et al., 2009)
+            - 'Photon Number Splitting' (8): Multi-photon pulse splitting on weak coherent source
+            - 'Time-Shift Attack' (9): Temporal gating offset / efficiency mismatch (Zhao et al., 2008)
         """
+        if isinstance(fault_name, int):
+            fault_name = ROOT_CAUSE_ID_TO_LABEL.get(fault_name, "Normal")
         self.active_fault = fault_name
         self.fault_intensity = float(np.clip(intensity, 0.0, 1.0))
 
@@ -111,6 +114,8 @@ class QuantumTelemetryEmulator:
         self.nominal_dcr_hz = self.config.nominal_dark_count_rate_hz
         self.timing_jitter_ps = self.config.nominal_timing_jitter_ps
         self.eavesdropping_fraction = 0.0
+
+    reset = reset_to_nominal
 
     def step(self, dt_seconds: float = 1.0) -> QuantumTelemetrySample:
         """

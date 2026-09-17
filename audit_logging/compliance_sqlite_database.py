@@ -60,7 +60,7 @@ class ComplianceAuditDatabase:
     # Sentinel value for the very first record in the chain
     _GENESIS_HASH: str = "GENESIS"
 
-    def __init__(self, db_path: str = "q_sentinel_audit.db"):
+    def __init__(self, db_path: str = "vector_q_audit.db"):
         self.db_path = db_path
         self._initialize_schema()
 
@@ -156,7 +156,7 @@ class ComplianceAuditDatabase:
         ptct_seconds: Optional[float],
         remediation_action_id: str,
         action_executed: str = "PENDING_OPERATOR_CONFIRMATION",
-        operator: str = "AUTONOMOUS_SENTINEL_CORE",
+        operator: str = "AUTONOMOUS_VECTOR_Q_CORE",
     ) -> int:
         """
         Logs a synchronized telemetry and diagnostic event to SQLite.

@@ -1,7 +1,7 @@
 """
 Validation Set E: Adversarial Robustness Testing Suite
 
-Comprehensive adversarial evaluation of Q-SENTINEL ML models.
+Comprehensive adversarial evaluation of VECTOR Q ML models.
 Tests robustness against FGSM, PGD, and Boundary attacks with
 physically-constrained perturbations.
 
@@ -28,7 +28,10 @@ from validation_framework.adversarial_robustness_tester import (
     RobustnessMetrics
 )
 from validation_framework.data_split_manifest import DataSplitManifest
-from anomaly_detection.sliding_window_features import TelemetryFeatureExtractor
+from anomaly_detection.sliding_window_features import (
+    TelemetryFeatureExtractor,
+    FEATURE_COLUMN_NAMES
+)
 from physics_engine.quantum_telemetry_emulator import QuantumTelemetryEmulator
 from config.qkd_system_parameters import QKDSystemParameters
 
@@ -128,7 +131,7 @@ class ValidationSetE_AdversarialRobustness:
         """
         params = QKDSystemParameters()
         emulator = QuantumTelemetryEmulator()
-        feature_extractor = TelemetryFeatureExtractor(window_size=25)
+        feature_extractor = TelemetryFeatureExtractor(max_buffer_size=35)
         
         X_list = []
         y_list = []
@@ -147,33 +150,17 @@ class ValidationSetE_AdversarialRobustness:
             
             # Extract features
             for _ in range(samples_per_class):
-                features = feature_extractor.extract_features()
-                if features is not None:
-                    X_list.append([
-                        features.qber,
-                        features.skr_bps,
-                        features.visibility,
-                        features.raw_counts_hz,
-                        features.dark_counts_hz,
-                        features.apd_temperature_c,
-                        features.channel_loss_db,
-                        features.timing_jitter_ps,
-                        features.snr,
-                        features.qber_slope_25,
-                        features.qber_acceleration_25,
-                        features.qber_std_25,
-                        features.visibility_mean_25,
-                        features.temp_qber_corr_25
-                    ])
-                    y_list.append(fault_id)
-                
-                # Step emulator
                 sample = emulator.step()
                 feature_extractor.add_sample(sample)
+                features = feature_extractor.extract_features(sample)
+                if features is not None:
+                    vec = [features[col] for col in FEATURE_COLUMN_NAMES]
+                    X_list.append(vec)
+                    y_list.append(fault_id)
             
             # Reset for next class
-            emulator.reset()
-            feature_extractor = TelemetryFeatureExtractor(window_size=25)
+            emulator.reset_to_nominal()
+            feature_extractor = TelemetryFeatureExtractor()
         
         X = np.array(X_list)
         y = np.array(y_list)
@@ -283,11 +270,11 @@ class ValidationSetE_AdversarialRobustness:
             for attack_type, metrics_list in results.items():
                 print(f"\n  {attack_type} Attack:")
                 for metrics in metrics_list:
-                    print(f"    ε = {metrics.epsilon_tested:.2f}:")
+                    print(f"    eps = {metrics.epsilon_tested:.2f}:")
                     print(f"      Misclassification Rate: {metrics.misclassification_rate*100:.1f}%")
                     print(f"      Avg Confidence Drop: {metrics.avg_confidence_drop:.3f}")
                     print(f"      Avg L2 Perturbation: {metrics.avg_l2_perturbation:.4f}")
-                    print(f"      Avg L∞ Perturbation: {metrics.avg_linf_perturbation:.4f}")
+                    print(f"      Avg L_inf Perturbation: {metrics.avg_linf_perturbation:.4f}")
                     print(f"      Physically Plausible: {metrics.physically_plausible_attacks_pct:.1f}%")
                     print(f"      Certified Robust Samples: {metrics.certified_robust_samples}/{metrics.n_samples_tested}")
         
@@ -296,15 +283,20 @@ class ValidationSetE_AdversarialRobustness:
         print("=" * 80)
         
         if self.certification_status == "CERTIFIED":
-            print("✅ Models meet adversarial robustness certification criteria")
+            print("[PASSED] Models meet adversarial robustness certification criteria")
         else:
-            print("❌ Models do not meet certification criteria - retraining recommended")
+            print("[FAILED] Models do not meet certification criteria - retraining recommended")
+
+
+def run_validation_set_e() -> Dict:
+    """Execute Validation Set E and return results dictionary."""
+    validator = ValidationSetE_AdversarialRobustness()
+    return validator.run_all_tests()
 
 
 def main():
     """Execute Validation Set E."""
-    validator = ValidationSetE_AdversarialRobustness()
-    results = validator.run_all_tests()
+    results = run_validation_set_e()
     
     # Return exit code based on certification
     if results['status'] == "CERTIFIED":

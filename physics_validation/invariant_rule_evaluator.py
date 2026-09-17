@@ -205,6 +205,42 @@ class PhysicalInvariantValidator:
                 signature = "Nominal Optical Channel Baseline"
                 explanation = "All quantum optical observables conform strictly to nominal ETSI GS QKD 014 bounds."
 
+        # Invariant 8: Finite-Key Security Upper Bound Check (Tomamichel-Lim-Curty-Lo Bound)
+        try:
+            from physics_engine.finite_key_analysis import compute_finite_key_bound
+            block_n = int(features.get("block_size_N", 10_000_000))
+            fk_res = compute_finite_key_bound(
+                qber=qber,
+                raw_counts_hz=raw_cnt,
+                block_size_N=block_n,
+                clock_rate_hz=self.config.pulse_repetition_rate_hz,
+                channel_loss_db=loss_db,
+                dark_count_prob=max(1e-7, dcr / self.config.pulse_repetition_rate_hz),
+            )
+            evidence["finite_key_rate_bps"] = fk_res.finite_key_rate_bps
+            evidence["finite_key_valid"] = fk_res.is_secure_block_positive
+            evidence["finite_penalty_pct"] = fk_res.finite_overhead_penalty_pct
+
+            # Veto benign classifications if finite-key bound collapses to zero or is physically violated
+            if ml_predicted_class == "Normal" and not fk_res.is_secure_block_positive:
+                status = "Physics Contradiction"
+                consistency_score = 0.10
+                signature = "Finite-Key Information-Theoretic Security Violation"
+                explanation = (
+                    f"Contradiction: ML predicted Normal, but finite-key security analysis (N={block_n:,}) "
+                    f"proves zero distillable secure key (l_bits <= 0, QBER={qber*100:.2f}%). Secure transmission impossible."
+                )
+            elif skr > 0 and not fk_res.is_secure_block_positive and qber >= self.config.qber_abort_threshold:
+                status = "Physics Contradiction"
+                consistency_score = 0.15
+                signature = "Finite-Key Abort Contradiction"
+                explanation = (
+                    f"Contradiction: Active SKR={skr:.0f} bps reported, but under finite block size N={block_n:,} "
+                    f"and QBER={qber*100:.2f}%, statistical fluctuations extinguish secure key capacity."
+                )
+        except Exception:
+            pass
+
         # Phase 11 & ADD-1: Operational Confidence Fusion
         # Fused Trust Score = 0.60 * ML_Confidence + 0.40 * Physics_Consistency
         fused_score = 0.60 * ml_confidence + 0.40 * consistency_score

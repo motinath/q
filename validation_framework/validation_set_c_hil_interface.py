@@ -32,19 +32,22 @@ def run_validation_set_c() -> Dict[str, Any]:
     t4_pass = len(snapshot.hardware_status_message) > 0
     
     all_passed = t1_pass and t2_pass and t3_pass and t4_pass
+    tests_list = [
+        {"test": "Snapshot Instance Validity", "passed": t1_pass},
+        {"test": "Monotonic Timestamp", "passed": t2_pass},
+        {"test": "Physical Value Integrity (No Mocking)", "passed": t3_pass},
+        {"test": "Hardware Status Diagnostic Integrity", "passed": t4_pass},
+    ]
     
     return {
         "suite_name": "Validation Set C (Hardware-in-the-Loop Interface Verification)",
         "all_passed": all_passed,
+        "total_tests": len(tests_list),
+        "passed_tests": sum(1 for t in tests_list if t["passed"]),
         "is_hardware_connected": snapshot.is_hardware_connected,
         "cpu_temperature_celsius": snapshot.cpu_temperature_celsius,
         "hardware_status_message": snapshot.hardware_status_message,
-        "tests": [
-            {"test": "Snapshot Instance Validity", "passed": t1_pass},
-            {"test": "Monotonic Timestamp", "passed": t2_pass},
-            {"test": "Physical Value Integrity (No Mocking)", "passed": t3_pass},
-            {"test": "Hardware Status Diagnostic Integrity", "passed": t4_pass},
-        ]
+        "tests": tests_list,
     }
 
 

@@ -64,7 +64,9 @@ class TelemetryFeatureExtractor:
     statistical distributions, derivatives, and cross-channel correlations.
     """
 
-    def __init__(self, max_buffer_size: int = 35):
+    def __init__(self, max_buffer_size: int = 35, window_size: Optional[int] = None):
+        if window_size is not None:
+            max_buffer_size = max(max_buffer_size, window_size + 10)
         self.max_buffer_size = max_buffer_size
         self.history: collections.deque = collections.deque(maxlen=max_buffer_size)
 

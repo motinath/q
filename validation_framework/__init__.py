@@ -1,5 +1,5 @@
 """
-Validation Framework Module for Q-SENTINEL (Layer 10).
+Validation Framework Module for VECTOR Q (Layer 10).
 Contains comprehensive test suites for Validation Sets A, B, C, D and latency profiler.
 """
 

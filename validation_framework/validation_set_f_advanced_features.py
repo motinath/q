@@ -1,7 +1,7 @@
 """
 Validation Set F: Advanced Features Certification
 
-Comprehensive validation of all advanced Q-SENTINEL 2.0 features:
+Comprehensive validation of all advanced VECTOR Q 2.0 features:
 - Dynamic Bayesian Network causal inference
 - Survival Analysis PTCT forecasting
 - Conformal Prediction uncertainty quantification
@@ -9,7 +9,7 @@ Comprehensive validation of all advanced Q-SENTINEL 2.0 features:
 - Causal counterfactual reasoning
 - Hardware interface integration
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 
@@ -394,6 +394,12 @@ class AdvancedFeaturesValidator:
         return report
 
 
+def run_validation_set_f() -> Dict[str, Any]:
+    """Execute Validation Set F (Advanced Features Certification)."""
+    validator = AdvancedFeaturesValidator()
+    return validator.run_all_validations()
+
+
 # ============================================================================
 # Example Usage
 # ============================================================================
@@ -402,7 +408,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     
     print("=" * 80)
-    print("Q-SENTINEL Validation Set F: Advanced Features Certification")
+    print("VECTOR Q Validation Set F: Advanced Features Certification")
     print("=" * 80)
     print()
     

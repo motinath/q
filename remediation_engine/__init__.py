@@ -1,5 +1,5 @@
 """
-Remediation and Mitigation Engine for Q-SENTINEL.
+Remediation and Mitigation Engine for VECTOR Q.
 Contains operational remediation mappings and closed-form physical impact estimator.
 """
 

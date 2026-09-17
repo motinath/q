@@ -165,6 +165,7 @@ def run_validation_set_d(models_dir: str = "models") -> Dict[str, Any]:
         "total_steps": len(trace_phases),
         "n_phases": 10,
         "overall_attribution_accuracy": float(overall_accuracy),
+        "overall_accuracy": float(overall_accuracy),
         "macro_fault_accuracy": macro_fault_accuracy,
         "anomaly_detection_rate": float(anomaly_detection_rate),
         "phase_accuracies": phase_accuracies,

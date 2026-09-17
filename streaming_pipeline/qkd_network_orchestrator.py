@@ -1,5 +1,5 @@
 """
-Unified Streaming Pipeline Orchestrator for Q-SENTINEL (Layers 1 through 9)
+Unified Streaming Pipeline Orchestrator for VECTOR Q (Layers 1 through 9)
 Synchronously routes telemetry from physics emulator / HIL across ML, XAI, forecasting, and audit stores.
 
 P4.2: Audit logging is now asynchronous.  log_event() calls are placed on a bounded
@@ -88,7 +88,7 @@ class QKDNetworkOrchestrator:
         # SQLite writes happen in the background; the hot path only enqueues a dict.
         self._audit_queue: queue.Queue = queue.Queue(maxsize=256)
         self._audit_thread = threading.Thread(
-            target=self._audit_worker, daemon=True, name="Q-SENTINEL-AuditWorker"
+            target=self._audit_worker, daemon=True, name="VECTOR-Q-AuditWorker"
         )
         self._audit_thread.start()
 
@@ -236,7 +236,7 @@ class QKDNetworkOrchestrator:
         # Layer 2: ML Anomaly Detection with adaptive baseline gate (P2.3)
         if self.anomaly_detector is not None and self.anomaly_detector.is_fitted:
             anomaly_res = self.anomaly_detector.predict_sample_with_baseline_gate(
-                features, adaptive_envelopes
+                features, envelopes
             )
         else:
             anomaly_res = AnomalyDetectionResult(
@@ -309,14 +309,37 @@ class QKDNetworkOrchestrator:
             qber_acceleration=qber_accel,
         )
         
-        # Layer 7: Remediation & Impact Estimation
-        # P4.3: When PTCT is CRITICAL, augment remediation with digital twin trajectories
+        # Layer 7: Remediation & Impact Estimation with Security Gating
         remediation_res = self.remediation_engine.generate_recommendation(
             fault_class=attribution_res.predicted_class,
             current_features=features,
         )
 
-        if ptct_res.urgency_level == "CRITICAL" and self.digital_twin is not None:
+        # Security-First Confidence & Invariant Gating Policy
+        is_physics_verified = (physics_res.validation_status == "ML + Physics Agree")
+        is_high_confidence = (attribution_res.confidence >= 0.85)
+        EMERGENCY_CLASSES = {"Intercept-Resend", "Detector Blinding", "Photon Number Splitting", "Time-Shift Attack"}
+
+        if not is_physics_verified or not is_high_confidence:
+            if attribution_res.predicted_class in EMERGENCY_CLASSES:
+                remediation_res.is_advisory_only = False
+                remediation_res.actuation_mode = "EMERGENCY"
+                remediation_res.optimization_rationale += (
+                    " [SECURITY QUARANTINE: Attack class suspected under uncertainty/contradiction. "
+                    "Enforcing immediate fail-secure session abort & channel quarantine.]"
+                )
+            else:
+                # Inhibit autonomous hardware actuation for low-confidence or contradicted benign faults
+                remediation_res.is_advisory_only = True
+                remediation_res.actuation_mode = "ADVISORY"
+                remediation_res.optimization_rationale = (
+                    f"AUTOMATION INHIBITED: Model confidence ({attribution_res.confidence:.1%}) < 85% "
+                    f"or Physics Invariant Guard flagged '{physics_res.validation_status}'. "
+                    f"Deferred to Human Operator (Tier-2 QNOC) to prevent unauthorized optical actuation."
+                )
+
+        # P4.3: When PTCT is CRITICAL, augment remediation with digital twin trajectories
+        if ptct_res.urgency_level == "CRITICAL" and self.digital_twin is not None and not remediation_res.is_advisory_only:
             remediation_res = self._augment_remediation_with_twin(
                 remediation_res, features, ptct_res
             )
@@ -352,7 +375,7 @@ class QKDNetworkOrchestrator:
                 ptct_seconds=ptct_res.t_cross_seconds,
                 remediation_action_id=remediation_res.action_id,
                 action_executed=remediation_res.actuation_mode,
-                operator="Q_SENTINEL_AI_SUPERVISOR",
+                operator="VECTOR_Q_AI_SUPERVISOR",
             )
             try:
                 self._audit_queue.put_nowait(audit_payload)

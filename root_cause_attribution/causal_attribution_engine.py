@@ -4,7 +4,7 @@ Causal Attribution Engine with Counterfactual Reasoning
 Causal Bayesian Network for root-cause analysis with counterfactual inference.
 Answers "what-if" questions and provides causal explanations.
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 
@@ -22,6 +22,13 @@ try:
 except ImportError:
     CAUSALNEX_AVAILABLE = False
     logging.warning("CausalNex not installed. Causal inference will use heuristic fallback.")
+    # Create dummy classes for fallback mode
+    class StructureModel:
+        pass
+    class BayesianNetwork:
+        pass
+    class InferenceEngine:
+        pass
 
 
 @dataclass

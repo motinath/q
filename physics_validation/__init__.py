@@ -1,5 +1,5 @@
 """
-Physics Validation Module for Q-SENTINEL.
+Physics Validation Module for VECTOR Q.
 Contains physical invariant rule evaluator that verifies ML anomaly and attribution hypotheses.
 """
 

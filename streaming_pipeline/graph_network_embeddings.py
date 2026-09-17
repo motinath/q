@@ -4,7 +4,7 @@ Graph Neural Network for Quantum Network Intelligence
 Graph Convolutional Networks (GCN) + Graph Attention Networks (GAT) for
 learning network-wide representations and predicting cascading failures.
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 
@@ -23,6 +23,18 @@ try:
 except ImportError:
     PYTORCH_GEOMETRIC_AVAILABLE = False
     logging.warning("PyTorch Geometric not installed. GNN will use MLP fallback.")
+    # Create dummy torch, nn, and related classes for fallback mode
+    class DummyTensor:
+        pass
+    class DummyModule:
+        pass
+    class DummyOptimizer:
+        pass
+    torch = type('torch', (), {'Tensor': DummyTensor, 'optim': type('optim', (), {'Adam': DummyOptimizer})()})()
+    nn = type('nn', (), {'Module': DummyModule})()
+    F = None
+    Data = None
+    Batch = None
 
 
 @dataclass

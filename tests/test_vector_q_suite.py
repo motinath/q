@@ -1,5 +1,5 @@
 """
-Comprehensive Automated Pytest Suite for Q-SENTINEL (QIC 2026 Edition)
+Comprehensive Automated Pytest Suite for VECTOR Q (QIC 2026 Edition)
 Covers:
 - Physical channel calculations and bounds (Scarani 2009, GLLP 2004)
 - Feature extraction ring buffers and W=25 moments
@@ -125,12 +125,12 @@ def test_physics_invariant_validator_and_fusion():
     normal_feats = {
         "qber": 0.02,
         "skr_bps": 12000.0,
-        "raw_counts_hz": 50000.0,
+        "raw_counts_hz": 2000000.0,  # 2 Mcps - nominal for 25km link
         "dark_counts_hz": 500.0,
         "visibility": 0.985,
         "temperature_celsius": -40.0,
         "timing_jitter_ps": 65.0,
-        "signal_to_noise_ratio": 100.0,
+        "signal_to_noise_ratio": 4500.0,
         "channel_attenuation_db": 5.0,
     }
     res_nom = validator.evaluate(normal_feats, ml_predicted_class="Normal", ml_confidence=0.95)
@@ -272,6 +272,8 @@ def test_incident_intelligence_generation():
         current_qber=0.08,
         qber_abort_limit=0.11,
         dqber_dt=0.001,
+        d2qber_dt2=0.00001,
+        forecast_model="LINEAR",
         forecast_trajectory_timestamps=[0, 10, 20],
         forecast_trajectory_qber=[0.08, 0.09, 0.10],
         urgency_level="WARNING",
@@ -284,7 +286,7 @@ def test_incident_intelligence_generation():
     assert rep.recommended_action_id == "ACTION_POLARIZATION_RECALIBRATION"
     
     md = gen.to_markdown(rep)
-    assert "# Q-SENTINEL INCIDENT DOSSIER" in md
+    assert "# VECTOR Q INCIDENT DOSSIER" in md
     assert "INC-TEST-001" in md
     
     js = gen.to_json(rep)

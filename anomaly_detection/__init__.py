@@ -1,5 +1,5 @@
 """
-Anomaly Detection module for Q-SENTINEL.
+Anomaly Detection module for VECTOR Q.
 Contains feature engineering and Isolation Forest anomaly detector.
 """
 

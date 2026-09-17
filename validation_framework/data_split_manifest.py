@@ -158,7 +158,22 @@ def load_or_create_data_split_manifest(manifest_path: str = "data_splits.json") 
     return create_and_export_data_splits_manifest(manifest_path=manifest_path)
 
 
+class DataSplitManifest:
+    """Class wrapper for loading and managing run-level data splits."""
+    def __init__(self, manifest_path: str = "data_splits.json"):
+        self.manifest_path = manifest_path
+        self.manifest = load_or_create_data_split_manifest(manifest_path)
+
+    @classmethod
+    def load_or_create(cls, manifest_path: str = "data_splits.json") -> "DataSplitManifest":
+        return cls(manifest_path)
+
+    def get_partition(self, partition_name: str) -> List[Dict[str, Any]]:
+        return self.manifest.get("partitions", {}).get(partition_name, [])
+
+
 if __name__ == "__main__":
     create_and_export_data_splits_manifest()
     print("Exported data_splits.json successfully.")
+
 

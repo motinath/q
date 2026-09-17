@@ -9,7 +9,7 @@ Integrates cutting-edge AI capabilities:
 - Causal Bayesian Network for counterfactual reasoning
 - Real hardware deployment interfaces
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 
@@ -48,6 +48,11 @@ from root_cause_attribution.causal_attribution_engine import (
 # Hardware interface
 from hardware_interface import BaseQKDHardwareInterface, HardwareTelemetry
 
+# Continuous Learning Flywheel & Security Rigor
+from model_lifecycle.drift_monitor import ModelDriftMonitor, DriftSignal
+from physics_engine.finite_key_analysis import FiniteKeySecurityAnalyzer, FiniteKeySecurityResult
+from remediation_engine.adaptive_decoy_optimizer import AdaptiveDecoyOptimizer
+
 
 @dataclass
 class AdvancedPipelineResult:
@@ -68,6 +73,12 @@ class AdvancedPipelineResult:
     
     # Hardware telemetry (if connected to real hardware)
     hardware_telemetry: Optional[HardwareTelemetry] = None
+
+    # Continuous Learning Flywheel & Finite-Key Cryptographic Rigor
+    drift_signal: Optional[DriftSignal] = None
+    finite_key_result: Optional[FiniteKeySecurityResult] = None
+    decoy_recommendation: Optional[Dict[str, Any]] = None
+
 
 
 class AdvancedQKDOrchestrator:
@@ -91,7 +102,10 @@ class AdvancedQKDOrchestrator:
         enable_survival_analysis: bool = True,
         enable_conformal_prediction: bool = True,
         enable_gnn: bool = False,  # Requires multi-link network
-        enable_counterfactual: bool = True
+        enable_counterfactual: bool = True,
+        enable_drift_monitoring: bool = True,
+        enable_finite_key_analysis: bool = True,
+        enable_adaptive_decoy_optimizer: bool = True
     ):
         """
         Initialize advanced orchestrator.
@@ -125,7 +139,7 @@ class AdvancedQKDOrchestrator:
         if enable_survival_analysis:
             try:
                 self.survival_forecaster = SurvivalPTCTForecaster(
-                    threshold_qber=self.config.qber_critical_threshold
+                    threshold_qber=self.config.qber_abort_threshold
                 )
                 self.logger.info("✓ Survival analysis forecaster initialized")
             except Exception as e:
@@ -152,6 +166,32 @@ class AdvancedQKDOrchestrator:
                 self.logger.info("✓ Counterfactual reasoning engine initialized")
             except Exception as e:
                 self.logger.warning(f"Counterfactual reasoning disabled: {e}")
+        
+        # Continuous Learning Flywheel & Security Rigor components
+        self.drift_monitor = None
+        self.finite_key_analyzer = None
+        self.adaptive_decoy_optimizer = None
+
+        if enable_drift_monitoring:
+            try:
+                self.drift_monitor = ModelDriftMonitor()
+                self.logger.info("✓ Confidence drift monitor (ADWIN + Page-Hinkley) initialized")
+            except Exception as e:
+                self.logger.warning(f"Drift monitor disabled: {e}")
+
+        if enable_finite_key_analysis:
+            try:
+                self.finite_key_analyzer = FiniteKeySecurityAnalyzer()
+                self.logger.info("✓ Finite-key security analyzer (Tomamichel-Lim bound) initialized")
+            except Exception as e:
+                self.logger.warning(f"Finite-key analyzer disabled: {e}")
+
+        if enable_adaptive_decoy_optimizer:
+            try:
+                self.adaptive_decoy_optimizer = AdaptiveDecoyOptimizer()
+                self.logger.info("✓ Adaptive decoy optimizer (Thompson Sampling MAB, Advisory Mode) initialized")
+            except Exception as e:
+                self.logger.warning(f"Adaptive decoy optimizer disabled: {e}")
         
         self.step_counter = 0
     
@@ -227,7 +267,7 @@ class AdvancedQKDOrchestrator:
         survival_result = None
         conformal_result = None
         
-        if self.survival_forecaster and self.survival_forecaster.is_fitted:
+        if self.survival_forecaster and getattr(self.survival_forecaster, 'is_fitted', False):
             try:
                 # Prepare features for survival model
                 current_features = pd.DataFrame({
@@ -293,6 +333,52 @@ class AdvancedQKDOrchestrator:
             except Exception as e:
                 self.logger.error(f"GNN embedding failed: {e}")
         
+        # Step 7: Continuous Confidence Drift Monitoring (Flywheel)
+        drift_signal = None
+        if self.drift_monitor:
+            try:
+                if hasattr(base_result, 'diagnosis') and base_result.diagnosis:
+                    current_conf = float(base_result.diagnosis.confidence)
+                elif hasattr(base_result, 'anomaly') and base_result.anomaly:
+                    current_conf = float(np.clip(1.0 - getattr(base_result.anomaly, 'anomaly_score', 0.0), 0.50, 1.0))
+                else:
+                    current_conf = 0.95
+                drift_signal = self.drift_monitor.update(current_conf)
+                if drift_signal.drift_detected:
+                    self.logger.warning(f"Confidence drift alert: {drift_signal.recommendation}")
+            except Exception as e:
+                self.logger.error(f"Drift monitoring failed: {e}")
+
+        # Step 8: Finite-Key Cryptographic Security Bound (Tomamichel-Lim)
+        finite_key_result = None
+        if self.finite_key_analyzer and hasattr(base_result, 'sample') and base_result.sample:
+            try:
+                loss_db = getattr(base_result.sample, 'channel_attenuation_db', getattr(base_result.sample, 'channel_loss_db', 5.0))
+                finite_key_result = self.finite_key_analyzer.compute_finite_key_bound(
+                    qber_z=base_result.sample.qber,
+                    raw_rate_hz=base_result.sample.raw_counts_hz,
+                    dark_count_hz=base_result.sample.dark_counts_hz,
+                    visibility=base_result.sample.visibility,
+                    loss_db=loss_db,
+                    block_size_n=1e7,
+                )
+            except Exception as e:
+                self.logger.error(f"Finite key analysis failed: {e}")
+
+        # Step 9: Proactive Adaptive Decoy Optimization (Advisory / Shadow Mode)
+        decoy_recommendation = None
+        if self.adaptive_decoy_optimizer and hasattr(base_result, 'sample') and base_result.sample:
+            try:
+                finite_skr = finite_key_result.finite_key_rate_bps if finite_key_result else 0.0
+                decoy_recommendation = self.adaptive_decoy_optimizer.step(
+                    qber=base_result.sample.qber,
+                    skr_bps=base_result.sample.skr_bps,
+                    is_anomaly=base_result.anomaly.is_anomaly,
+                    finite_key_rate_bps=finite_skr,
+                )
+            except Exception as e:
+                self.logger.error(f"Adaptive decoy optimization failed: {e}")
+
         return AdvancedPipelineResult(
             base_result=base_result,
             causal_inference=causal_result,
@@ -300,7 +386,10 @@ class AdvancedQKDOrchestrator:
             survival_forecast=survival_result,
             conformal_forecast=conformal_result,
             network_embedding=network_embedding,
-            hardware_telemetry=hardware_telemetry
+            hardware_telemetry=hardware_telemetry,
+            drift_signal=drift_signal,
+            finite_key_result=finite_key_result,
+            decoy_recommendation=decoy_recommendation
         )
     
     def _discretize_state(self, features: Dict[str, float]) -> Dict[str, Any]:

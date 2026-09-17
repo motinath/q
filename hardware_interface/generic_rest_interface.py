@@ -3,7 +3,7 @@ Generic REST API Hardware Interface
 
 For QKD systems with RESTful API.
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 

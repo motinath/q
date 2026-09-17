@@ -1,5 +1,5 @@
 """
-Streaming Pipeline Module for Q-SENTINEL.
+Streaming Pipeline Module for VECTOR Q.
 Orchestrates real-time telemetry processing across Layers 1 through 9.
 """
 

@@ -1,5 +1,5 @@
 """
-Physics Engine Module for Q-SENTINEL.
+Physics Engine Module for VECTOR Q.
 Provides analytical QKD physical equations, continuous telemetry emulator, and hardware sensor interfaces.
 """
 

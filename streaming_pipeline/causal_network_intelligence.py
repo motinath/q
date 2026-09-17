@@ -5,7 +5,7 @@ Dynamic Bayesian Network (DBN) for temporal and spatial causal inference
 across multi-link quantum networks. Distinguishes correlation from causation
 and enables probabilistic root-cause identification.
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 

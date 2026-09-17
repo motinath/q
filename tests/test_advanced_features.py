@@ -1,5 +1,5 @@
 """
-Validation Tests for Advanced Q-SENTINEL Features (Version 2.0)
+Validation Tests for Advanced VECTOR Q Features (Version 2.0)
 
 Tests all new capabilities:
 - Dynamic Bayesian Network causal inference
@@ -9,7 +9,7 @@ Tests all new capabilities:
 - Causal counterfactual reasoning
 - Hardware interfaces
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 

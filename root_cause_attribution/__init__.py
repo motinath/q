@@ -1,5 +1,5 @@
 """
-Root Cause Attribution and Explainable AI Module for Q-SENTINEL.
+Root Cause Attribution and Explainable AI Module for VECTOR Q.
 Contains LightGBM multi-class root-cause classifier and SHAP TreeExplainer.
 """
 

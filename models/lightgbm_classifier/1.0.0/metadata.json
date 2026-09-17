@@ -1,0 +1,42 @@
+{
+  "model_id": "lightgbm_classifier_1.0.0",
+  "model_type": "lightgbm_classifier",
+  "version": "1.0.0",
+  "created_timestamp": "2026-09-14T22:28:44.884766",
+  "trained_on_n_samples": 2800,
+  "training_duration_seconds": 4.024131774902344,
+  "status": "training",
+  "accuracy": 1.0,
+  "macro_f1_score": 1.0,
+  "per_class_f1_scores": {
+    "0": 1.0,
+    "1": 1.0,
+    "2": 1.0,
+    "3": 1.0,
+    "4": 1.0,
+    "5": 1.0,
+    "6": 1.0,
+    "7": 1.0,
+    "8": 1.0,
+    "9": 1.0
+  },
+  "anomaly_detection_auc": null,
+  "validation_accuracy": 1.0,
+  "validation_f1_score": 1.0,
+  "physics_agreement_rate": null,
+  "avg_latency_ms": null,
+  "training_data_hash": null,
+  "hyperparameters": {
+    "n_estimators": 120,
+    "learning_rate": 0.05,
+    "max_depth": 6,
+    "num_leaves": 31
+  },
+  "git_commit_hash": null,
+  "deployed_timestamp": null,
+  "n_predictions_served": 0,
+  "production_accuracy": null,
+  "model_artifact_path": "models\\lightgbm_classifier\\1.0.0\\model.joblib",
+  "scaler_artifact_path": null,
+  "calibrator_artifact_path": "models\\lightgbm_classifier\\1.0.0\\calibrator.joblib"
+}

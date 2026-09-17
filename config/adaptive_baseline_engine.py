@@ -21,6 +21,17 @@ class ChannelBaselineEnvelope:
     upper_3sigma: float
     is_calibrated: bool
 
+    @property
+    def std(self) -> float:
+        """Alias for std_dev."""
+        return self.std_dev
+
+    @property
+    def ewma(self) -> float:
+        """Alias for ewma_value."""
+        return self.ewma_value
+
+
 
 class AdaptiveBaselineEngine:
     """

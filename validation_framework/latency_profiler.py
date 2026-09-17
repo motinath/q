@@ -1,5 +1,5 @@
 """
-Latency and Performance Profiler for Q-SENTINEL
+Latency and Performance Profiler for VECTOR Q
 Measures sub-millisecond execution timing across individual pipeline layers to verify real-time guarantees.
 Author: Senior Quantum Systems & Applied ML Engineering Team
 """

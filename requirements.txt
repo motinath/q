@@ -1,4 +1,4 @@
-# Q-SENTINEL - Minimal Requirements (Python 3.10 ONLY)
+# VECTOR Q - Minimal Requirements (Python 3.10 ONLY)
 # These are the absolute minimum packages needed
 
 numpy
@@ -12,3 +12,6 @@ matplotlib
 plotly
 pytest
 requests
+shap
+reportlab
+

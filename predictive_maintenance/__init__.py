@@ -1,5 +1,5 @@
 """
-Predictive Maintenance Module for Q-SENTINEL.
+Predictive Maintenance Module for VECTOR Q.
 Contains Projected Threshold Crossing Time (PTCT) forecaster.
 """
 

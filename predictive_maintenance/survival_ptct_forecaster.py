@@ -4,7 +4,7 @@ Survival Analysis PTCT Forecaster
 Cox Proportional Hazards model for time-to-threshold prediction with
 censored data handling. Provides survival curves and hazard ratios.
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 
@@ -70,10 +70,10 @@ class SurvivalPTCTForecaster:
         self.threshold_qber = threshold_qber
         self.penalizer = penalizer
         self.logger = logging.getLogger(__name__)
+        self.is_fitted = False
         
         if LIFELINES_AVAILABLE:
             self.cox_model = CoxPHFitter(penalizer=penalizer)
-            self.is_fitted = False
             self.use_fallback = False
         else:
             self.logger.warning("Using quadratic fallback for PTCT")
@@ -98,6 +98,7 @@ class SurvivalPTCTForecaster:
         """
         if self.use_fallback:
             self.logger.info("Skipping survival model training (fallback mode)")
+            self.is_fitted = True
             return
         
         try:

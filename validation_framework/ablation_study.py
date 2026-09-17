@@ -3,7 +3,7 @@ Phase 23: Architecture Ablation Study
 Empirically benchmarks:
 1. ML Only (LightGBM standalone)
 2. Physics Only (Deterministic rule heuristics standalone)
-3. Q-Sentinel Hybrid (ML + Physics Invariant Consistency Fusion)
+3. Vector Q Hybrid (ML + Physics Invariant Consistency Fusion)
 Reports: Macro-F1, False Positive Rate (FPR), and Diagnostic Explainability.
 Author: Senior Quantum Systems & Applied ML Engineering Team
 """
@@ -93,7 +93,7 @@ def run_ablation_study(
         p_class = evaluate_physics_only(feats)
         preds_physics_only.append(ROOT_CAUSE_LABEL_TO_ID.get(p_class, 0))
         
-        # 3. Hybrid Q-Sentinel
+        # 3. Hybrid Vector Q
         phys_val = validator.evaluate(feats, ml_predicted_class=attr_raw.predicted_class, ml_confidence=attr_raw.confidence)
         attr_hybrid = classifier.predict_sample(feature_dict=feats, physics_validation=phys_val)
         preds_hybrid.append(ROOT_CAUSE_LABEL_TO_ID.get(attr_hybrid.predicted_class, 0))
@@ -127,7 +127,7 @@ def run_ablation_study(
             "Explainability_Depth": "High (Rule Determinism, No Probability)",
         },
         {
-            "Architecture": "Q-Sentinel Hybrid (ML + Physics Fusion)",
+            "Architecture": "Vector Q Hybrid (ML + Physics Fusion)",
             "Macro_F1": round(f1_hyb, 4),
             "False_Positive_Rate": round(fpr_hyb, 4),
             "Explainability_Depth": "High (5-Point Physics + SHAP)",

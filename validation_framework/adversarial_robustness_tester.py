@@ -1,5 +1,5 @@
 """
-Adversarial Robustness Testing Framework for Q-SENTINEL
+Adversarial Robustness Testing Framework for VECTOR Q
 
 Evaluates model robustness against adversarial perturbations in feature space.
 Implements FGSM, PGD, and boundary attacks to test model resilience.
@@ -531,11 +531,19 @@ class AdversarialRobustnessTester:
         X_test: np.ndarray,
         y_test: np.ndarray,
         epsilons: List[float] = [0.05, 0.1, 0.2],
-        attacks: List[str] = ["FGSM", "PGD", "Boundary"]
+        attacks: List[str] = ["FGSM", "PGD", "Boundary"],
+        sample_limit: int = 25
     ) -> Dict[str, List[RobustnessMetrics]]:
         """
-        Evaluate model robustness across multiple attacks and epsilon values.
+        Run complete adversarial evaluation across multiple attacks and epsilons.
         
+        Args:
+            X_test: Test features
+            y_test: True labels
+            epsilons: List of perturbation magnitudes to test
+            attacks: List of attack types ("FGSM", "PGD", "Boundary")
+            sample_limit: Maximum test samples per attack for responsive evaluation
+            
         Returns:
             Dictionary mapping attack type to list of RobustnessMetrics (one per epsilon)
         """
@@ -543,12 +551,12 @@ class AdversarialRobustnessTester:
         
         for attack_type in attacks:
             for epsilon in epsilons:
-                print(f"[ADVERSARIAL] Testing {attack_type} with ε={epsilon}...")
+                print(f"[ADVERSARIAL] Testing {attack_type} with eps={epsilon}...")
                 
                 attack_results = []
                 
                 for i, (x, y_true) in enumerate(zip(X_test, y_test)):
-                    if i >= 100:  # Limit to 100 samples for speed
+                    if i >= sample_limit:
                         break
                     
                     if attack_type == "FGSM":

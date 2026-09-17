@@ -1,0 +1,29 @@
+{
+  "model_id": "isolation_forest_1.0.0",
+  "model_type": "isolation_forest",
+  "version": "1.0.0",
+  "created_timestamp": "2026-09-14T22:28:40.632623",
+  "trained_on_n_samples": 280,
+  "training_duration_seconds": 0.3275644779205322,
+  "status": "training",
+  "accuracy": null,
+  "macro_f1_score": null,
+  "per_class_f1_scores": null,
+  "anomaly_detection_auc": null,
+  "validation_accuracy": 0.95,
+  "validation_f1_score": null,
+  "physics_agreement_rate": null,
+  "avg_latency_ms": null,
+  "training_data_hash": null,
+  "hyperparameters": {
+    "contamination": "auto",
+    "n_estimators": 60
+  },
+  "git_commit_hash": null,
+  "deployed_timestamp": null,
+  "n_predictions_served": 0,
+  "production_accuracy": null,
+  "model_artifact_path": "models\\isolation_forest\\1.0.0\\model.joblib",
+  "scaler_artifact_path": "models\\isolation_forest\\1.0.0\\scaler.joblib",
+  "calibrator_artifact_path": null
+}

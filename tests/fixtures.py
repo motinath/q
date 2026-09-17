@@ -1,9 +1,9 @@
 """
-Test Fixtures for Q-SENTINEL Advanced Features
+Test Fixtures for VECTOR Q Advanced Features
 
 Provides reusable test data and mock objects.
 
-Author: Q-SENTINEL Development Team
+Author: VECTOR Q Development Team
 Version: 2.0.0
 """
 
